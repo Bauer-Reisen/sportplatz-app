@@ -13,7 +13,7 @@ const DOPPELT_METER = 150;
 const MELDUNGEN_BIS_AUSBLENDEN = 3;
 const LETZTE_ANGABEN = 5;              // je Sache zählen die letzten 5 Angaben
 const VERALTET_TAGE = 365;
-const MIN_BEWERTUNGEN = 3;             // Noten erst ab 3 Bewertungen
+const MIN_BEWERTUNGEN = 3;             // darunter: Note zeigen, aber mit Hinweis „erst wenige Bewertungen“
 const LAT = [47.0, 55.2];
 const LON = [5.5, 15.5];
 
@@ -84,7 +84,7 @@ export default {
             (SELECT MAX(b.tag) FROM bewertungen b WHERE b.platz = p.id AND b.versteckt = 0) AS zuletzt
           FROM plaetze p WHERE p.versteckt = 0 ORDER BY p.ort, p.verein`);
         for (const p of plaetze) {
-          p.schnitt = p.n >= MIN_BEWERTUNGEN ? Math.round(p.schnitt * 10) / 10 : null;
+          p.schnitt = p.n > 0 ? Math.round(p.schnitt * 10) / 10 : null;
         }
         return reply(200, { plaetze, heute: t, min: MIN_BEWERTUNGEN });
       }
@@ -282,7 +282,7 @@ async function admin({ path, method, request, all, one, run, reply, t, db }) {
 }
 
 // ================= Auswertung eines Platzes =================
-// Sterne: Durchschnitt aller sichtbaren Bewertungen, erst ab MIN_BEWERTUNGEN.
+// Sterne: Durchschnitt aller sichtbaren Bewertungen, schon ab der ersten (die App weist auf „erst wenige“ hin).
 // Angebot: je Sache die letzten 5 Angaben → ja / nein / unklar; „veraltet“, wenn die neueste über ein Jahr alt ist.
 // Bierpreis: mittlerer Wert (Median) der letzten 5 Angaben je Größe.
 function auswerten(rows, angebotAb, heute) {
@@ -292,7 +292,7 @@ function auswerten(rows, angebotAb, heute) {
     const n = werte.length;
     noten[k] = {
       n,
-      schnitt: n >= MIN_BEWERTUNGEN ? Math.round((werte.reduce((s, r) => s + r[k], 0) / n) * 10) / 10 : null,
+      schnitt: n > 0 ? Math.round((werte.reduce((s, r) => s + r[k], 0) / n) * 10) / 10 : null,
       zuletzt: werte[0]?.tag || null,
       veraltet: n > 0 && alterTage(werte[0].tag, heute) > VERALTET_TAGE,
     };

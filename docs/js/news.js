@@ -2,9 +2,13 @@
 // Wer die App neu hat, bekommt stattdessen den Rundgang.
 // Neueste zuerst; nur Änderungen, die man sieht und kennen sollte (keine Reparaturen).
 // Jeder Eintrag nennt in `karte` die Rundgang-Karte, die ihn erklärt, oder 'klein' (prüft scripts/check-help.js).
-import { dialog } from './ui.js?v=0.3.0';
+import { dialog } from './ui.js?v=0.3.1';
 
 export const NEWS = [
+  {
+    v: '0.3.1', karte: 'karte', title: 'Noten ab der ersten Bewertung',
+    items: ['Die Sterne stehen jetzt schon ab der <strong>ersten Bewertung</strong> da. Bei weniger als 3 steht dabei: „Erst wenige Bewertungen“ – auf der Karte ist der Punkt dann blass.'],
+  },
   {
     v: '0.3.0', karte: 'bewerten', title: 'Jetzt wird bewertet ⭐',
     items: [

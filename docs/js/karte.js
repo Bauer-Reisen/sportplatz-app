@@ -1,10 +1,11 @@
 // Seite „Karte“: alle Plätze auf einer Karte, farbig nach Gesamt-Note.
 // Grün ab 4, gelb ab 3, rot darunter, grau = noch zu wenige Bewertungen.
-import { getPlaetze } from './api.js?v=0.3.0';
-import { locate, pos, posFrisch } from './geo.js?v=0.3.0';
-import { neueKarte } from './kartenbaustein.js?v=0.3.0';
-import { esc, zahl } from './ui.js?v=0.3.0';
+import { getPlaetze } from './api.js?v=0.3.1';
+import { locate, pos, posFrisch } from './geo.js?v=0.3.1';
+import { neueKarte } from './kartenbaustein.js?v=0.3.1';
+import { esc, zahl } from './ui.js?v=0.3.1';
 
+const WENIGE = 3; // darunter blass
 export const farbe = (s) => (s == null ? '#8a948f' : s >= 4 ? '#1c8a3f' : s >= 3 ? '#e0a100' : '#c0392b');
 
 export async function render(view) {
@@ -19,7 +20,8 @@ export async function render(view) {
         <span><i style="background:${farbe(4)}"></i> ab 4 ★</span>
         <span><i style="background:${farbe(3)}"></i> 3 bis 4</span>
         <span><i style="background:${farbe(2)}"></i> unter 3</span>
-        <span><i style="background:${farbe(null)}"></i> zu wenige Bewertungen</span>
+        <span><i style="background:${farbe(4)};opacity:.45"></i> blass = erst wenige</span>
+        <span><i style="background:${farbe(null)}"></i> noch nicht bewertet</span>
       </p>
       <p class="muted small" id="status"></p>
     </section>`;
@@ -37,8 +39,8 @@ export async function render(view) {
   }
   const { L, map } = karte;
   for (const p of plaetze) {
-    L.circleMarker([p.lat, p.lon], { radius: 11, color: '#ffffff', weight: 2.5, fillColor: farbe(p.schnitt), fillOpacity: 1 })
-      .bindPopup(`<strong>${esc(p.verein)}</strong><br>${esc(p.ort)}<br>${p.schnitt != null ? `<span class="gold">★</span> ${zahl(p.schnitt)} · ${p.n} Bewertungen` : p.n ? `erst ${p.n} ${p.n === 1 ? 'Bewertung' : 'Bewertungen'}` : 'noch nicht bewertet'}<br><a href="#/platz/${esc(p.id)}">Ansehen ›</a>`)
+    L.circleMarker([p.lat, p.lon], { radius: 11, color: '#ffffff', weight: 2.5, fillColor: farbe(p.schnitt), fillOpacity: p.n && p.n < WENIGE ? 0.45 : 1 })
+      .bindPopup(`<strong>${esc(p.verein)}</strong><br>${esc(p.ort)}<br>${p.schnitt != null ? `<span class="gold">★</span> ${zahl(p.schnitt)} · ${p.n} ${p.n === 1 ? 'Bewertung' : 'Bewertungen'}${p.n < WENIGE ? ' (erst wenige)' : ''}` : 'noch nicht bewertet'}<br><a href="#/platz/${esc(p.id)}">Ansehen ›</a>`)
       .addTo(map);
   }
   if (!posFrisch() && plaetze.length) {

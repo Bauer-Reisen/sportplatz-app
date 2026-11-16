@@ -1,10 +1,10 @@
 // Seite eines Platzes: Noten, was es gibt (✓ / ✗ / ?), Bierpreis, letzte Einträge mit „Melden“.
-import { getPlatz, findPlatz, melden } from './api.js?v=0.3.0';
-import { mapsLink, posFrisch, pos, meters, fmtDist } from './geo.js?v=0.3.0';
-import { ANGEBOT } from './angebot.js?v=0.3.0';
-import { heuteBewertet, wartend, geraet } from './senden.js?v=0.3.0';
-import { store } from './store.js?v=0.3.0';
-import { esc, dialog, toast, zahl, datum } from './ui.js?v=0.3.0';
+import { getPlatz, findPlatz, melden } from './api.js?v=0.3.1';
+import { mapsLink, posFrisch, pos, meters, fmtDist } from './geo.js?v=0.3.1';
+import { ANGEBOT } from './angebot.js?v=0.3.1';
+import { heuteBewertet, wartend, geraet } from './senden.js?v=0.3.1';
+import { store } from './store.js?v=0.3.1';
+import { esc, dialog, toast, zahl, datum } from './ui.js?v=0.3.1';
 
 const NAMEN = { gesamt: 'Gesamt', bier: '🍺 Bier', essen: '🌭 Essen', preise: '💶 Preise', stimmung: '🎉 Stimmung' };
 const GRUENDE = [
@@ -48,15 +48,16 @@ export async function render(view, id) {
   const notenHtml = g.schnitt != null
     ? `<div class="note-gross">
          <span class="zahl">${zahl(g.schnitt)}</span>
-         <span><span class="sterne">${sterneText(g.schnitt)}</span><br><span class="muted small">${g.n} Bewertungen${g.veraltet ? ` · <span class="alt">letzte vom ${datum(g.zuletzt)}</span>` : ''}</span></span>
+         <span><span class="sterne">${sterneText(g.schnitt)}</span><br><span class="muted small">${g.n} ${g.n === 1 ? 'Bewertung' : 'Bewertungen'}${g.veraltet ? ` · <span class="alt">letzte vom ${datum(g.zuletzt)}</span>` : ''}</span></span>
        </div>
+       ${g.n < d.min ? '<p class="wenige small">Erst wenige Bewertungen – die Note kann sich noch deutlich ändern.</p>' : ''}
        <ul class="einzelnoten">
          ${['bier', 'essen', 'preise', 'stimmung'].map((k) => {
            const x = d.noten[k];
-           return `<li><span>${NAMEN[k]}</span>${x.schnitt != null ? `<span><span class="sterne klein">${sterneText(x.schnitt)}</span> ${zahl(x.schnitt)}</span>` : `<span class="muted small">${x.n ? `erst ${x.n}×` : '–'}</span>`}</li>`;
+           return `<li><span>${NAMEN[k]}</span>${x.schnitt != null ? `<span><span class="sterne klein">${sterneText(x.schnitt)}</span> ${zahl(x.schnitt)}${x.n < d.min ? ` <span class="muted small">(${x.n}×)</span>` : ''}</span>` : '<span class="muted small">–</span>'}</li>`;
          }).join('')}
        </ul>`
-    : `<p><strong>${g.n ? `Erst ${g.n} ${g.n === 1 ? 'Bewertung' : 'Bewertungen'}` : 'Noch keine Bewertungen'}.</strong> Eine Note gibt es ab ${d.min} Bewertungen – damit nicht eine Meinung allein zählt.</p>`;
+    : '<p><strong>Noch keine Bewertungen.</strong> Sei die oder der Erste!</p>';
 
   // ---------- Angebot ----------
   const bekannt = ANGEBOT.map((a) => ({ ...a, ...d.angebot[a.k] })).filter((a) => a.status && a.status !== 'unbekannt');

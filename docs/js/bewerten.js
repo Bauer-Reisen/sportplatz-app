@@ -3,12 +3,12 @@
 //   #/bewerten/<id>          → Sterne (+ freiwillig: Einzelnoten, Angebot, Bierpreis)
 //   #/bewerten/<id>/angebot  → nur Angebot eintragen, ohne Sterne (z. B. als Betreiber)
 // Gesendet wird über die Warteschlange (senden.js): klappt auch ohne Netz, 10 Sekunden „Rückgängig“.
-import { HIER_METER } from './config.js?v=0.3.0';
-import { getPlaetze, findPlatz, getPlatz } from './api.js?v=0.3.0';
-import { locate, pos, posFrisch, meters, fmtDist } from './geo.js?v=0.3.0';
-import { ANGEBOT } from './angebot.js?v=0.3.0';
-import { einreihen, zuruecknehmen, heuteBewertet, neueId, WARTEN_MS } from './senden.js?v=0.3.0';
-import { esc, toast, undoBar } from './ui.js?v=0.3.0';
+import { HIER_METER } from './config.js?v=0.3.1';
+import { getPlaetze, findPlatz, getPlatz } from './api.js?v=0.3.1';
+import { locate, pos, posFrisch, meters, fmtDist } from './geo.js?v=0.3.1';
+import { ANGEBOT } from './angebot.js?v=0.3.1';
+import { einreihen, zuruecknehmen, heuteBewertet, neueId, WARTEN_MS } from './senden.js?v=0.3.1';
+import { esc, toast, undoBar } from './ui.js?v=0.3.1';
 
 const WORTE = ['', 'Lieber nicht', 'Geht so', 'Ordentlich', 'Gut', 'Top!'];
 const EINZELN = [

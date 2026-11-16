@@ -1,10 +1,10 @@
 // Seite „Platz anlegen“: Verein und Ort eintippen. Die Lage kommt entweder vom Handy
 // („Ich bin gerade dort“) oder man tippt den Platz auf der Karte an („Auf der Karte zeigen“),
 // z. B. nachträglich von daheim oder als Betreiber.
-import { addPlatz, ApiError, cache } from './api.js?v=0.3.0';
-import { locate, pos, posFrisch } from './geo.js?v=0.3.0';
-import { neueKarte, ortSuchen } from './kartenbaustein.js?v=0.3.0';
-import { esc, dialog, toast } from './ui.js?v=0.3.0';
+import { addPlatz, ApiError, cache } from './api.js?v=0.3.1';
+import { locate, pos, posFrisch } from './geo.js?v=0.3.1';
+import { neueKarte, ortSuchen } from './kartenbaustein.js?v=0.3.1';
+import { esc, dialog, toast } from './ui.js?v=0.3.1';
 
 export function render(view) {
   view.innerHTML = `

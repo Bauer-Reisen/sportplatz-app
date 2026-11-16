@@ -1,7 +1,7 @@
 // Rundgang beim allerersten Öffnen: ein paar Karten, jederzeit überspringbar.
 // Unter dem Zahnrad („Rundgang ansehen“) wieder aufrufbar.
 // `stand` = Version, in der die Karte zuletzt inhaltlich angepasst wurde (prüft scripts/check-help.js).
-import { dialog } from './ui.js?v=0.3.0';
+import { dialog } from './ui.js?v=0.3.1';
 
 export const STEPS = [
   {
@@ -21,8 +21,8 @@ export const STEPS = [
     text: 'Unter „Mehr angeben“ tippst du an, was es gibt: <strong>✓</strong> gibt es, <strong>✗</strong> gibt es nicht. Es zählen die letzten 5 Angaben – widersprechen sie sich, steht da <strong>?</strong>. Wer nur das Angebot kennt (z. B. der Wirt), nimmt <strong>Nur Angebot eintragen</strong>.',
   },
   {
-    id: 'karte', stand: '0.3.0', icon: '🗺️', title: 'Alle Plätze auf der Karte',
-    text: 'Unter <strong>Karte</strong> siehst du alle Plätze: <strong>grün</strong> ab 4 Sternen, <strong>gelb</strong> ab 3, <strong>rot</strong> darunter, <strong>grau</strong> = noch zu wenige Bewertungen.',
+    id: 'karte', stand: '0.3.1', icon: '🗺️', title: 'Alle Plätze auf der Karte',
+    text: 'Unter <strong>Karte</strong> siehst du alle Plätze: <strong>grün</strong> ab 4 Sternen, <strong>gelb</strong> ab 3, <strong>rot</strong> darunter, <strong>blass</strong> = erst wenige Bewertungen, <strong>grau</strong> = noch keine.',
   },
   {
     id: 'netz', stand: '0.1.0', icon: '📶', title: 'Kein Netz am Platz?',

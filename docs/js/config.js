@@ -1,5 +1,5 @@
 // Feste Einstellungen der App. Version wird mit scripts/set-version.js gesetzt.
-export const VERSION = '0.3.0';
+export const VERSION = '0.3.1';
 export const APP_NAME = 'Halbzeit-Check';
 
 // Adresse der gemeinsamen Datenbank (Cloudflare Worker). Beim Testen am PC der lokale Worker.
