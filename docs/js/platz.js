@@ -1,10 +1,11 @@
 // Seite eines Platzes: Noten, was es gibt (✓ / ✗ / ?), Bierpreis, letzte Einträge mit „Melden“.
-import { getPlatz, findPlatz, melden } from './api.js?v=0.3.2';
-import { mapsLink, posFrisch, pos, meters, fmtDist } from './geo.js?v=0.3.2';
-import { ANGEBOT } from './angebot.js?v=0.3.2';
-import { heuteBewertet, wartend, geraet } from './senden.js?v=0.3.2';
-import { store } from './store.js?v=0.3.2';
-import { esc, dialog, toast, zahl, datum } from './ui.js?v=0.3.2';
+import { getPlatz, findPlatz, melden } from './api.js?v=0.4.0';
+import { mapsLink, posFrisch, pos, meters, fmtDist } from './geo.js?v=0.4.0';
+import { ANGEBOT } from './angebot.js?v=0.4.0';
+import { heuteBewertet, wartend, geraet } from './senden.js?v=0.4.0';
+import { store } from './store.js?v=0.4.0';
+import { esc, dialog, toast, zahl, datum } from './ui.js?v=0.4.0';
+import { warDa, manuell } from './besuche.js?v=0.4.0';
 
 const NAMEN = { gesamt: 'Gesamt', bier: '🍺 Bier', essen: '🌭 Essen', preise: '💶 Preise', stimmung: '🎉 Stimmung' };
 const GRUENDE = [
@@ -96,6 +97,7 @@ export async function render(view, id) {
       ${schonHeute
         ? '<p class="card card-soft">✅ Du hast hier heute schon etwas eingetragen. Danke!</p>'
         : `<a class="btn btn-primary btn-wide btn-big" href="#/bewerten/${esc(p.id)}">⭐ Jetzt bewerten</a>`}
+      <p class="center" style="margin:6px 0 0"><button type="button" class="link" id="warda" aria-pressed="${warDa(p.id)}">${warDa(p.id) ? '🏟️ In „Meine Plätze“ ✓' : '🏟️ Hier war ich schon'}</button></p>
       <div class="card" style="margin-top:16px">
         <h2>Noten</h2>
         ${notenHtml}
@@ -109,9 +111,19 @@ export async function render(view, id) {
         <h2>Letzte Einträge</h2>
         ${eintragHtml}
       </div>
+      <a class="btn btn-wide" href="https://www.fussball.de/suche/-/text/${encodeURIComponent(p.verein)}/restriction/CLUB_AND_TEAM" target="_blank" rel="noopener">⚽ Wann ist hier Spiel?</a>
+      <p class="muted small center" style="margin:4px 0 12px">Öffnet den Spielplan auf fussball.de</p>
       <a class="btn btn-wide" href="${esc(mapsLink(p))}" target="_blank" rel="noopener">🗺️ In Karten-App öffnen</a>
       <p class="muted small center" style="margin-top:16px">Angelegt am ${esc(datum(p.angelegt))}</p>
     </section>`;
+
+  view.querySelector('#warda').addEventListener('click', (e) => {
+    const an = !warDa(p.id);
+    manuell(p, an);
+    e.target.textContent = an ? '🏟️ In „Meine Plätze“ ✓' : '🏟️ Hier war ich schon';
+    e.target.setAttribute('aria-pressed', String(an));
+    toast(an ? 'In „Meine Plätze“ eingetragen.' : 'Aus „Meine Plätze“ entfernt.');
+  });
 
   view.querySelectorAll('.melden').forEach((b) => b.addEventListener('click', async () => {
     const r = await dialog({

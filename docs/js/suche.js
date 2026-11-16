@@ -24,8 +24,11 @@ function passt(q, wort) {
   if (wort.includes(q)) return 2;                       // genau drin
   const erlaubt = q.length >= 8 ? 2 : q.length >= 4 ? 1 : 0;
   if (!erlaubt) return 0;
-  // auch den Wortanfang prüfen (wer noch tippt: „Arnsh“ → „arnshausen“)
-  if (abstand(q, wort) <= erlaubt || abstand(q, wort.slice(0, q.length)) <= erlaubt - (q.length < 8 ? 0 : 1)) return 1;
+  // ganzes Wort – oder Wortanfang (wer noch tippt: „Arnsh“ → „arnshausen“). Weniger Fehler = weiter oben.
+  const ganz = abstand(q, wort);
+  if (ganz <= erlaubt) return 1.5 - 0.5 * ganz;
+  const anfang = abstand(q, wort.slice(0, q.length));
+  if (anfang <= erlaubt - (q.length < 8 ? 0 : 1)) return 1.2 - 0.5 * anfang;
   return 0;
 }
 
@@ -44,7 +47,8 @@ export function platzSuche(plaetze, text) {
       if (!best) { alle = false; break; }
       punkte += best;
     }
-    if (alle) out.push({ p, punkte });
+    // bei Gleichstand: bekannter Verein bzw. Sportheim zuerst
+    if (alle) out.push({ p, punkte: punkte + (p.heim ? 0.1 : 0) + (p.name && p.name === p.verein ? 0.05 : 0) });
   }
   return out.sort((a, b) => b.punkte - a.punkte).map((x) => x.p);
 }

@@ -2,9 +2,24 @@
 // Wer die App neu hat, bekommt stattdessen den Rundgang.
 // Neueste zuerst; nur Änderungen, die man sieht und kennen sollte (keine Reparaturen).
 // Jeder Eintrag nennt in `karte` die Rundgang-Karte, die ihn erklärt, oder 'klein' (prüft scripts/check-help.js).
-import { dialog } from './ui.js?v=0.3.2';
+import { dialog } from './ui.js?v=0.4.0';
 
 export const NEWS = [
+  {
+    v: '0.4.0', karte: 'wo', title: 'Fast alle Plätze schon drin',
+    items: [
+      'Die App kennt jetzt fast alle Fußballplätze in Unterfranken. Einfach suchen – auch mit Tippfehler – und <strong>mit einem Tipp anlegen</strong>.',
+      'Auch <strong>Wo bin ich?</strong> erkennt den Platz, wenn ihn noch niemand angelegt hat.',
+    ],
+  },
+  {
+    v: '0.4.0', karte: 'meine', title: 'Meine Plätze 🏟️',
+    items: ['Dein Stempelheft: Jeder bewertete Platz kommt dazu. Zu finden oben in der Liste.'],
+  },
+  {
+    v: '0.4.0', karte: 'klein', title: 'Wann ist hier Spiel?',
+    items: ['Auf jeder Platzseite: ein Tipp öffnet den Spielplan des Vereins auf fussball.de.'],
+  },
   {
     v: '0.3.1', karte: 'karte', title: 'Noten ab der ersten Bewertung',
     items: ['Die Sterne stehen jetzt schon ab der <strong>ersten Bewertung</strong> da. Bei weniger als 3 steht dabei: „Erst wenige Bewertungen“ – auf der Karte ist der Punkt dann blass.'],

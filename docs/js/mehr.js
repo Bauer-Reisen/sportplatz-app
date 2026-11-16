@@ -1,8 +1,8 @@
 // Seite „Mehr“ (Zahnrad oben): Rundgang, Neuigkeiten, Home-Bildschirm, Version.
-import { VERSION, APP_NAME } from './config.js?v=0.3.2';
-import { installCard } from './install.js?v=0.3.2';
-import { runTour } from './tour.js?v=0.3.2';
-import { NEWS, showNews } from './news.js?v=0.3.2';
+import { VERSION, APP_NAME } from './config.js?v=0.4.0';
+import { installCard } from './install.js?v=0.4.0';
+import { runTour } from './tour.js?v=0.4.0';
+import { NEWS, showNews } from './news.js?v=0.4.0';
 
 export function render(view) {
   view.innerHTML = `
@@ -21,6 +21,8 @@ export function render(view) {
           <li><strong>Standort</strong> nur, wenn du „Wo bin ich?“ tippst – er bleibt im Handy und wird nicht gespeichert. Gespeichert wird nur die Lage des Sportplatzes.</li>
           <li>Dein Handy bekommt eine <strong>Zufallsnummer</strong>, damit pro Platz nur ein Eintrag am Tag geht. Der Server merkt sich davon nur einen Prüfwert, aus dem man nichts zurückrechnen kann.</li>
           <li><strong>Ortssuche:</strong> Der Suchtext geht an komoot (Photon) bzw. OpenStreetMap. <strong>Karte:</strong> Kartenbilder vom Bundesamt für Kartographie (BKG).</li>
+          <li><strong>Meine Plätze</strong> liegt nur auf deinem Handy.</li>
+          <li>Die Vereinsliste stammt aus OpenStreetMap (© OpenStreetMap-Mitwirkende, ODbL) und steckt in der App – beim Suchen geht nichts ins Netz. „Wann ist hier Spiel?“ öffnet fussball.de.</li>
           <li>Die App liegt bei GitHub, die Bewertungen bei Cloudflare in Westeuropa.</li>
         </ul>
       </div>

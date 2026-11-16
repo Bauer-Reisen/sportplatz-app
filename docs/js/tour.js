@@ -1,7 +1,7 @@
 // Rundgang beim allerersten Öffnen: ein paar Karten, jederzeit überspringbar.
 // Unter dem Zahnrad („Rundgang ansehen“) wieder aufrufbar.
 // `stand` = Version, in der die Karte zuletzt inhaltlich angepasst wurde (prüft scripts/check-help.js).
-import { dialog } from './ui.js?v=0.3.2';
+import { dialog } from './ui.js?v=0.4.0';
 
 export const STEPS = [
   {
@@ -9,8 +9,8 @@ export const STEPS = [
     text: 'Mal ein Verkaufsfenster mit zwei Getränken, mal ein Sportheim mit Fassbier, Currywurst und Pommes. Hier seht ihr, <strong>was es wo gibt und wie gut es ist</strong>.',
   },
   {
-    id: 'wo', stand: '0.2.1', icon: '📍', title: 'Wo bin ich?',
-    text: 'Am Platz ein Tipp auf <strong>Wo bin ich?</strong>, und der nächste Platz steht ganz oben. Fehlt er noch, legst du ihn gleich an – vor Ort oder später von daheim auf der Karte.',
+    id: 'wo', stand: '0.4.0', icon: '📍', title: 'Wo bin ich?',
+    text: 'Am Platz ein Tipp auf <strong>Wo bin ich?</strong>, und der nächste Platz steht ganz oben. Die App kennt fast alle Fußballplätze in Unterfranken – fehlt einer noch, legst du ihn <strong>mit einem Tipp</strong> an.',
   },
   {
     id: 'bewerten', stand: '0.3.0', icon: '⭐', title: 'In 30 Sekunden bewertet',
@@ -23,6 +23,10 @@ export const STEPS = [
   {
     id: 'karte', stand: '0.3.1', icon: '🗺️', title: 'Alle Plätze auf der Karte',
     text: 'Unter <strong>Karte</strong> siehst du alle Plätze: <strong>grün</strong> ab 4 Sternen, <strong>gelb</strong> ab 3, <strong>rot</strong> darunter, <strong>blass</strong> = erst wenige Bewertungen, <strong>grau</strong> = noch keine.',
+  },
+  {
+    id: 'meine', stand: '0.4.0', icon: '🏟️', title: 'Meine Plätze',
+    text: 'Jeder Platz, den du bewertest, landet in deinem Stempelheft <strong>Meine Plätze</strong>. Wie viele schaffst du in der Saison? Bleibt nur auf deinem Handy.',
   },
   {
     id: 'netz', stand: '0.1.0', icon: '📶', title: 'Kein Netz am Platz?',

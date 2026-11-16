@@ -3,13 +3,16 @@
 //   #/bewerten/<id>          → Sterne (+ freiwillig: Einzelnoten, Angebot, Bierpreis)
 //   #/bewerten/<id>/angebot  → nur Angebot eintragen, ohne Sterne (z. B. als Betreiber)
 // Gesendet wird über die Warteschlange (senden.js): klappt auch ohne Netz, 10 Sekunden „Rückgängig“.
-import { HIER_METER } from './config.js?v=0.3.2';
-import { getPlaetze, findPlatz, getPlatz } from './api.js?v=0.3.2';
-import { locate, pos, posFrisch, meters, fmtDist } from './geo.js?v=0.3.2';
-import { ANGEBOT } from './angebot.js?v=0.3.2';
-import { einreihen, zuruecknehmen, heuteBewertet, neueId, WARTEN_MS } from './senden.js?v=0.3.2';
-import { esc, toast, undoBar } from './ui.js?v=0.3.2';
-import { platzSuche } from './suche.js?v=0.3.2';
+import { HIER_METER } from './config.js?v=0.4.0';
+import { getPlaetze, findPlatz, getPlatz } from './api.js?v=0.4.0';
+import { locate, pos, posFrisch, meters, fmtDist } from './geo.js?v=0.4.0';
+import { ANGEBOT } from './angebot.js?v=0.4.0';
+import { einreihen, zuruecknehmen, heuteBewertet, neueId, WARTEN_MS, heute } from './senden.js?v=0.4.0';
+import { esc, toast, undoBar } from './ui.js?v=0.4.0';
+import { merken, vergessen, warDa } from './besuche.js?v=0.4.0';
+import { platzSuche } from './suche.js?v=0.4.0';
+import { vorschlaege, offen } from './vorschlaege.js?v=0.4.0';
+import { vorschlagHtml, naechster, hierBekannt } from './liste.js?v=0.4.0';
 
 const WORTE = ['', 'Lieber nicht', 'Geht so', 'Ordentlich', 'Gut', 'Top!'];
 const EINZELN = [
@@ -38,19 +41,25 @@ async function waehlen(view) {
     </section>`;
   const $ = (s) => view.querySelector(s);
   let plaetze = [];
+  let liste = [];
+  vorschlaege().then((l) => { liste = l; });
   try { plaetze = await getPlaetze(); } catch (ex) { $('#liste').innerHTML = `<li class="muted">${esc(ex.message)}</li>`; }
 
   const zeichnen = () => {
     const q = $('#suche').value.trim();
     if (!q) { $('#liste').innerHTML = ''; return; }
     const rows = platzSuche(plaetze, q).slice(0, 30);
-    $('#liste').innerHTML = rows.length
-      ? rows.map((p) => `<li><a href="#/bewerten/${esc(p.id)}"><span class="pname">${esc(p.verein)}</span><span class="pmeta">${esc(p.ort)}</span></a></li>`).join('')
+    const neu = platzSuche(offen(liste, plaetze), q).slice(0, 8);
+    $('#liste').innerHTML = rows.length || neu.length
+      ? rows.map((p) => `<li><a href="#/bewerten/${esc(p.id)}"><span class="pname">${esc(p.verein)}</span><span class="pmeta">${esc(p.ort)}</span></a></li>`).join('') + vorschlagHtml(neu)
       : `<li class="nichtda"><p><strong>„${esc(q)}“ ist noch nicht in der App.</strong> Vielleicht hat ihn noch niemand angelegt.</p><a class="btn btn-primary btn-wide" href="#/neu/${encodeURIComponent(q)}">🗺️ Auf der Karte suchen und anlegen</a></li>`;
   };
   const hierZeigen = () => {
     const best = plaetze.map((p) => ({ ...p, m: meters(pos.lat, pos.lon, p.lat, p.lon) })).sort((a, b) => a.m - b.m)[0];
-    $('#hier').innerHTML = best && best.m <= HIER_METER
+    const bekannt = naechster(offen(liste, plaetze));
+    $('#hier').innerHTML = !(best && best.m <= HIER_METER) && bekannt
+      ? hierBekannt(bekannt)
+      : best && best.m <= HIER_METER
       ? `<a class="card here" href="#/bewerten/${esc(best.id)}">
            <span class="kicker">Du bist wohl hier – antippen</span>
            <span class="pname">${esc(best.verein)}</span>
@@ -218,10 +227,14 @@ async function formular(view, id, nurAngebot) {
       bierpreis, groesse: bierpreis == null ? null : groesse,
     };
     einreihen(body);
+    // Besuch ins Stempelheft – „Vor ein paar Tagen“ zählt als Besuch ohne genauen Tag
+    const tag = body.besuch === 'heute' ? heute() : '';
+    const vorher = warDa(p.id);
+    const ziel = body.art === 'bewertung' ? merken(p, tag) : 0;
     if (navigator.vibrate) navigator.vibrate(30);
     location.hash = `#/platz/${p.id}`;
-    undoBar(navigator.onLine ? 'Danke! Wird gleich gesendet …' : 'Danke! Gespeichert – wird gesendet, sobald Netz da ist.', WARTEN_MS, () => {
-      if (zuruecknehmen(body.id)) toast('Zurückgenommen – nichts gesendet.');
+    undoBar((ziel > 1 ? `🏆 Dein ${ziel}. Platz! ` : 'Danke! ') + (navigator.onLine ? 'Wird gleich gesendet …' : 'Wird gesendet, sobald Netz da ist.'), WARTEN_MS, () => {
+      if (zuruecknehmen(body.id)) { toast('Zurückgenommen – nichts gesendet.'); if (body.art === 'bewertung') { if (!vorher) vergessen(p.id); else if (tag) vergessen(p.id, tag); } }
       else toast('Schon gesendet – zu spät zum Zurücknehmen.');
       dispatchEvent(new CustomEvent('halbzeit:gesendet', { detail: p.id }));
     });

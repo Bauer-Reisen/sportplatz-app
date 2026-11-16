@@ -1,7 +1,7 @@
 // Verbindung zur gemeinsamen Datenbank. Platzliste und Platzseiten werden im Handy zwischengespeichert,
 // damit sie am Platz auch bei schlechtem Netz da sind.
-import { API } from './config.js?v=0.3.2';
-import { store } from './store.js?v=0.3.2';
+import { API } from './config.js?v=0.4.0';
+import { store } from './store.js?v=0.4.0';
 
 export class ApiError extends Error {
   constructor(status, message, data = {}) { super(message); this.status = status; this.data = data; }

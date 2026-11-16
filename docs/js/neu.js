@@ -1,13 +1,20 @@
 // Seite „Platz anlegen“: Verein und Ort eintippen. Die Lage kommt entweder vom Handy
 // („Ich bin gerade dort“) oder man tippt den Platz auf der Karte an („Auf der Karte zeigen“),
 // z. B. nachträglich von daheim oder als Betreiber.
-import { addPlatz, ApiError, cache } from './api.js?v=0.3.2';
-import { locate, pos, posFrisch, meters } from './geo.js?v=0.3.2';
-import { neueKarte, ortSuchen, START } from './kartenbaustein.js?v=0.3.2';
-import { esc, dialog, toast } from './ui.js?v=0.3.2';
+import { addPlatz, ApiError, cache } from './api.js?v=0.4.0';
+import { locate, pos, posFrisch, meters } from './geo.js?v=0.4.0';
+import { neueKarte, ortSuchen, START } from './kartenbaustein.js?v=0.4.0';
+import { esc, dialog, toast } from './ui.js?v=0.4.0';
+import { vorschlaege, offen } from './vorschlaege.js?v=0.4.0';
 
-// vorschlag: Suchtext aus der Platzsuche („… ist noch nicht in der App“) – dann gleich auf der Karte suchen
-export function render(view, vorschlag = '') {
+// #/neu/<text>    Suchtext aus der Platzsuche („… ist noch nicht in der App“) – gleich auf der Karte suchen
+// #/neu/osm/<nr>  Platz aus der Vereinsliste – Verein, Ort und Lage sind schon ausgefüllt
+export async function render(view, vorschlag = '', nr) {
+  let start = null;
+  if (vorschlag === 'osm') {
+    vorschlag = '';
+    start = (await vorschlaege())[Number(nr)] || null;
+  }
   view.innerHTML = `
     <section>
       <a class="back" href="#/">‹ Alle Plätze</a>
@@ -31,6 +38,11 @@ export function render(view, vorschlag = '') {
 
   const $ = (s) => view.querySelector(s);
   const form = $('#neu');
+  if (start) {
+    $('#verein').value = start.verein;
+    $('#ort').value = start.ort;
+    form.insertAdjacentHTML('beforebegin', `<p class="card card-soft small">📋 Aus der Vereinsliste übernommen. ${start.verein ? 'Bitte kurz prüfen, ob der Vereinsname stimmt.' : '<strong>Bitte noch den Verein eintragen.</strong>'}</p>`);
+  }
   const err = $('.error');
   let modus = null;
   let wahl = null; // { lat, lon, acc }
@@ -83,7 +95,7 @@ export function render(view, vorschlag = '') {
       </div>
       <div id="treffer"></div>
       <div id="karte" class="pickmap" aria-label="Karte: tippe auf den Sportplatz"></div>
-      <p id="wahl" class="small">Tippe auf der Karte auf den Sportplatz. Sportplätze sind hellgrüne Flächen.</p>`;
+      <p id="wahl" class="small">Tippe auf der Karte auf den Sportplatz. <strong>Graue Punkte</strong> sind bekannte Fußballplätze – antippen übernimmt sie.</p>`;
     const suchen = async () => {
       const text = $('#ortsuche').value.trim();
       if (text.length < 2) return;
@@ -105,7 +117,7 @@ export function render(view, vorschlag = '') {
     $('#ortsuche').addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); suchen(); } });
 
     try {
-      karte = await neueKarte($('#karte'), posFrisch() ? { lat: pos.lat, lon: pos.lon, zoom: 15 } : {});
+      karte = await neueKarte($('#karte'), start ? { lat: start.lat, lon: start.lon, zoom: 17 } : posFrisch() ? { lat: pos.lat, lon: pos.lon, zoom: 15 } : {});
     } catch (ex) {
       $('#karte').outerHTML = `<p class="error">${esc(ex.message)}</p>`;
       return;
@@ -125,7 +137,20 @@ export function render(view, vorschlag = '') {
       err.textContent = '';
     };
     map.on('click', (e) => nadelSetzen(e.latlng.lat, e.latlng.lng));
-    if ($('#ortsuche').value.trim().length >= 2 && (vorschlag || !posFrisch())) suchen();
+    // Fußballplätze aus der Vereinsliste als graue Punkte: antippen = übernehmen
+    for (const v of offen(await vorschlaege(), cache.plaetze || [])) {
+      L.circleMarker([v.lat, v.lon], { radius: 7, color: '#ffffff', weight: 2, fillColor: '#8a948f', fillOpacity: 0.9 })
+        .bindTooltip(esc(v.name))
+        .on('click', (e) => {
+          L.DomEvent.stopPropagation(e);
+          nadelSetzen(v.lat, v.lon, `${esc(v.name)} übernommen.`);
+          if (!$('#verein').value.trim() && v.verein) $('#verein').value = v.verein;
+          if (!$('#ort').value.trim()) $('#ort').value = v.ort;
+        })
+        .addTo(map);
+    }
+    if (start) nadelSetzen(start.lat, start.lon, 'Lage aus der Vereinsliste.');
+    else if ($('#ortsuche').value.trim().length >= 2 && (vorschlag || !posFrisch())) suchen();
   }
   let nadelSetzen = () => {};
   function springen(r) {
@@ -138,9 +163,9 @@ export function render(view, vorschlag = '') {
     }
   }
 
-  if (vorschlag) modusSetzen('karte');
+  if (vorschlag || start) modusSetzen('karte');
   else if (posFrisch()) modusSetzen('hier');
-  if (!vorschlag) $('#verein').focus();
+  if ((!vorschlag && !start) || (start && !start.verein)) $('#verein').focus();
 
   // ---------- Anlegen ----------
   const senden = async (trotzdem = false) => {

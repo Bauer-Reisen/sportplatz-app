@@ -1,26 +1,27 @@
 // Einstieg der App: Seitenwechsel, Rundgang beim ersten Öffnen, „Was ist neu?“, Updates, Offline.
-import { VERSION } from './config.js?v=0.3.2';
-import { store } from './store.js?v=0.3.2';
-import { toast } from './ui.js?v=0.3.2';
-import { renderTabs } from './tabs.js?v=0.3.2';
-import { runTour } from './tour.js?v=0.3.2';
-import { unseen, showNews, NEWS } from './news.js?v=0.3.2';
-import { senderStarten } from './senden.js?v=0.3.2';
+import { VERSION } from './config.js?v=0.4.0';
+import { store } from './store.js?v=0.4.0';
+import { toast } from './ui.js?v=0.4.0';
+import { renderTabs } from './tabs.js?v=0.4.0';
+import { runTour } from './tour.js?v=0.4.0';
+import { unseen, showNews, NEWS } from './news.js?v=0.4.0';
+import { senderStarten } from './senden.js?v=0.4.0';
 
 const view = document.getElementById('view');
 
 // Jede Seite ist eine eigene Datei und wird erst beim Öffnen geladen.
 const PAGES = {
-  liste: () => import('./liste.js?v=0.3.2'),
-  karte: () => import('./karte.js?v=0.3.2'),
-  bewerten: () => import('./bewerten.js?v=0.3.2'),
-  mehr: () => import('./mehr.js?v=0.3.2'),
-  platz: () => import('./platz.js?v=0.3.2'),
-  neu: () => import('./neu.js?v=0.3.2'),
-  verwaltung: () => import('./verwaltung.js?v=0.3.2'),
+  liste: () => import('./liste.js?v=0.4.0'),
+  karte: () => import('./karte.js?v=0.4.0'),
+  bewerten: () => import('./bewerten.js?v=0.4.0'),
+  mehr: () => import('./mehr.js?v=0.4.0'),
+  platz: () => import('./platz.js?v=0.4.0'),
+  neu: () => import('./neu.js?v=0.4.0'),
+  verwaltung: () => import('./verwaltung.js?v=0.4.0'),
+  meine: () => import('./meine.js?v=0.4.0'),
 };
 // Unterseiten gehören zu diesem Reiter
-const TAB_OF = { platz: 'liste', neu: 'liste', verwaltung: 'mehr' };
+const TAB_OF = { platz: 'liste', neu: 'liste', verwaltung: 'mehr', meine: 'liste' };
 
 async function route() {
   const [, page = '', ...rest] = (location.hash || '#/').split('/');
