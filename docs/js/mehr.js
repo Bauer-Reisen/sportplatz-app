@@ -1,8 +1,8 @@
 // Seite „Mehr“ (Zahnrad oben): Rundgang, Neuigkeiten, Home-Bildschirm, Version.
-import { VERSION, APP_NAME } from './config.js?v=0.2.0';
-import { installCard } from './install.js?v=0.2.0';
-import { runTour } from './tour.js?v=0.2.0';
-import { NEWS, showNews } from './news.js?v=0.2.0';
+import { VERSION, APP_NAME } from './config.js?v=0.2.1';
+import { installCard } from './install.js?v=0.2.1';
+import { runTour } from './tour.js?v=0.2.1';
+import { NEWS, showNews } from './news.js?v=0.2.1';
 
 export function render(view) {
   view.innerHTML = `

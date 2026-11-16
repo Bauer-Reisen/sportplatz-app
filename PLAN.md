@@ -11,7 +11,17 @@ Machbar: ja – kostenlos, schnell umsetzbar, mit denselben Bausteinen wie deine
 - **Gemeinsame Bewertungen:** liegen bei **Cloudflare** (wie bei der Kochabend-App), Speicherort Europa. Konto und Zugang sind schon da, kein Einschlafen in der Sommerpause, keine Kosten.
 - **Ohne Anmeldung:** Jedes Handy bekommt eine Zufallsnummer. Sie steht nicht bei der Bewertung, niemand kann sehen, wo ein Handy war.
 - **Am Platz: „Wo bin ich?“** – ein Tipp, der nächste Platz steht oben. Der Standort bleibt im Handy. Ohne Standort: Suche nach Ort oder Verein.
-- **Neue Plätze:** Fehlt einer, tippt dein Freund am Platz auf **„Platz fehlt – hier anlegen“** (Verein, Ort; die Lage nimmt die App vom Handy). Er ist sofort für alle da. Du kannst Plätze und Bewertungen über einen eigenen Verwaltungs-Code ausblenden.
+- **Neue Plätze:** Fehlt einer, tippt man auf **„Platz fehlt – hier anlegen“** (Verein, Ort). Die Lage: **„Ich bin gerade dort“** (vom Handy) oder **„Auf der Karte zeigen“** (Ort suchen, Sportplatz antippen) – so geht es auch nachträglich von daheim oder für Betreiber. Er ist sofort für alle da. Du kannst Plätze und Bewertungen über einen eigenen Verwaltungs-Code ausblenden.
+- **Nachträglich bewerten:** geht von überall; die App fragt „Wann warst du da?“ (Heute / Vor ein paar Tagen).
+- **„Nur Angebot eintragen“:** ankreuzen, was es gibt, plus Preise – ohne Sterne (z. B. wer das Angebot kennt, auch Betreiber).
+
+**Widersprüchliche Angaben (Wunsch 16.11.2026):**
+- Beim Bewerten zeigt die App das bekannte Angebot; man tippt nur an, was nicht stimmt (✓ gibt es / ✗ gab’s nicht).
+- Je Sache zählen die letzten 5 Angaben: fast alle ✓ → „gibt es“, fast alle ✗ → „gibt es nicht (mehr)“, gemischt → „? unklar – Angaben widersprechen sich“.
+- Alle Angaben zählen gleich – keine Anmeldung, keine Betreiber-Prüfung (Wunsch: niemandem Betrug unterstellen).
+- Ältere Angaben (über 1 Jahr) bleiben gültig, solange nichts Neueres da ist, werden aber als **veraltet** gekennzeichnet („zuletzt bestätigt März 2025“). Gilt für Angebot und Sterne. Neuere Angaben gehen vor.
+- Bierpreis: mittlerer Wert der letzten 5 – einzelne Ausreißer zählen nicht.
+- **Melden** (stimmt nicht / beleidigend / Werbung-Fake): ab 3 verschiedenen Handys sofort ausgeblendet, bis du in der Verwaltung „Wieder zeigen“ oder „Entfernen“ wählst. Dazu „Angebot zurücksetzen“ je Platz (z. B. Pächterwechsel).
 - **Schlechtes Netz:** Die Bewertung wird sofort im Handy gespeichert („Gespeichert ✓“) und automatisch gesendet, sobald Netz da ist.
 - **Verbreitung:** Link in eurer WhatsApp-Gruppe.
 
@@ -41,9 +51,9 @@ Machbar: ja – kostenlos, schnell umsetzbar, mit denselben Bausteinen wie deine
 Nach jedem Abschnitt: veröffentlichen, Link + 3–5 Testpunkte fürs iPhone, `STAND.md` aktualisieren, **auf dein Okay warten**.
 
 1. **Grundgerüst online** – Name, Symbol, Leiste unten, Zahnrad mit „Mehr“, Rundgang, Hinweis „Zum Home-Bildschirm“, geht offline, Update kommt von selbst. – *Erkennbar:* Symbol liegt auf dem Home-Bildschirm, die App öffnet sich auch im Flugmodus.
-2. **Plätze** – Datenbank, Liste, Suche, „Wo bin ich?“, „Platz fehlt – hier anlegen“, „In Karten-App öffnen“. – *Erkennbar:* Du legst zu Hause einen Test-Platz an, er steht bei „Wo bin ich?“ ganz oben und erscheint auch auf einem zweiten Handy.
-3. **Bewerten** – Formular, Speichern im Handy, Senden, Noten in Liste und Platz-Seite, kurzer Datenschutz-Hinweis. – *Erkennbar:* Du bewertest, eine Freundin sieht es; eine zweite Bewertung am selben Tag wird freundlich abgelehnt.
-4. **Alltagstauglich** – kein Netz, Melden, Verwaltung (Ausblenden, Notbremse), Sicherung. – *Erkennbar:* Im Flugmodus bewerten, App schließen, Flugmodus aus, App öffnen – die Bewertung erscheint.
+2. **Plätze** – Datenbank, Liste, Suche, „Wo bin ich?“, „Platz fehlt – hier anlegen“ (vor Ort oder auf der Karte antippen), „In Karten-App öffnen“. – *Erkennbar:* Du legst zu Hause einen Test-Platz an, er steht bei „Wo bin ich?“ ganz oben; einen zweiten legst du über die Karte an einem anderen Ort an.
+3. **Bewerten** – Formular, „Wann warst du da?“, Angebot bestätigen/widersprechen, „Nur Angebot eintragen“, Speichern im Handy, Senden, Noten und Angebot (✓ / ✗ / ? / veraltet) auf der Platz-Seite, kurzer Datenschutz-Hinweis. – *Erkennbar:* Du bewertest, eine Freundin sieht es; eine zweite Bewertung am selben Tag wird freundlich abgelehnt.
+4. **Alltagstauglich** – kein Netz, Melden (ab 3 Meldungen ausgeblendet), Verwaltung (Wieder zeigen / Entfernen, Angebot zurücksetzen, Notbremse), Sicherung. – *Erkennbar:* Im Flugmodus bewerten, App schließen, Flugmodus aus, App öffnen – die Bewertung erscheint.
    → **Danach Testlauf im Freundeskreis** (2–3 Spieltage), dann Nachbesserungen.
 5. **Karte** – alle Plätze auf einer Karte, Farbe nach Note. – *Erkennbar:* Dein Test-Platz sitzt an der richtigen Stelle, Antippen öffnet ihn.
 
@@ -72,6 +82,6 @@ Nach jedem Abschnitt: veröffentlichen, Link + 3–5 Testpunkte fürs iPhone, `S
 - D1: `plaetze` (id, verein, ort, lat, lon, angelegt, versteckt), `bewertungen` (id, platz, tag, gesamt, bier, essen, preise, stimmung, angebot JSON aus fester Liste, bierpreis 0–15, groesse aus Liste, versteckt; **keine Geräte-Nummer**), `sperren` (sha256(geraet+platz+tag), nicht abrufbar), `meldungen`, `einstellungen` (schreiben_erlaubt). Tag vom Server (Europe/Berlin). Kein update/delete über die öffentliche Schnittstelle; Verwaltung nur mit `ADMIN_CODE`.
 - „Wo bin ich?“: `navigator.geolocation` nur auf Knopfdruck, Entfernung im Gerät. Platz anlegen: Lage auf 4 Nachkommastellen gerundet.
 - Warteschlange in IndexedDB (wie Kochabend `photos.js`), Senden bei `online`/Öffnen.
-- Karte: Leaflet in `docs/vendor/` + basemap.de Web Raster („© GeoBasis-DE / BKG (Jahr) CC BY 4.0“).
+- Platz auf Karte wählen (seit 0.3.0): Ortssuche über Nominatim (OSM, nur der Suchtext, auf Knopfdruck, countrycodes=de), Antippen setzt Nadel. Karte: Leaflet in `docs/vendor/` + basemap.de Web Raster („© GeoBasis-DE / BKG (Jahr) CC BY 4.0“).
 - Datenschutz: GitHub (USA), Cloudflare (Speicher EU, Firma USA, Data Privacy Framework), basemap.de. Kein Standort gespeichert außer Lage neuer Plätze, keine IP, kein Analyse-Werkzeug → kein Cookie-Banner.
 - Gestaltung: dunkle Schrift auf Weiß (Sonne), Sterne ≥ 56 px, Tippflächen ≥ 48 px, nur Tippen, Wichtiges im unteren Drittel, keine Töne.

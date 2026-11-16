@@ -1,7 +1,7 @@
 // Seite eines Platzes. Bewertungen kommen in Abschnitt 3.
-import { getPlaetze, findPlatz } from './api.js?v=0.2.0';
-import { mapsLink, posFrisch, pos, meters, fmtDist } from './geo.js?v=0.2.0';
-import { esc } from './ui.js?v=0.2.0';
+import { getPlaetze, findPlatz } from './api.js?v=0.2.1';
+import { mapsLink, posFrisch, pos, meters, fmtDist } from './geo.js?v=0.2.1';
+import { esc } from './ui.js?v=0.2.1';
 
 const fmtDatum = (iso) => (iso ? iso.split('-').reverse().join('.') : '');
 

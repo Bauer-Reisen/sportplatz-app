@@ -132,6 +132,16 @@ input:focus { outline: 3px solid var(--accent); outline-offset: 1px; border-colo
 .error { color: var(--error); font-weight: 600; min-height: 1.4em; margin: .6em 0; }
 .warn { color: #8a5a00; font-weight: 600; }
 .lage p { margin: 0 0 .3em; }
+.seg { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px; }
+.seg .btn { padding: 10px 8px; font-size: .98rem; min-height: 60px; }
+.seg .btn.on { border: 2.5px solid var(--accent); background: var(--accent-soft); color: var(--accent); }
+.suchzeile { display: flex; gap: 8px; margin-bottom: 8px; }
+.suchzeile input { flex: 1; min-width: 0; }
+.treffer { list-style: none; padding: 0; margin: 0 0 8px; }
+.treffer .link { text-align: left; padding: 8px 2px; }
+.pickmap { height: 320px; border-radius: 12px; border: 1.5px solid var(--line); margin: 4px 0 8px; z-index: 0; }
+.leaflet-container { font: inherit; }
+.leaflet-control-attribution { font-size: 11px; }
 .back { display: inline-block; color: var(--accent); font-weight: 700; text-decoration: none; padding: 8px 0; margin: -6px 0 6px; min-height: 44px; }
 
 /* ---------- Platzliste ---------- */

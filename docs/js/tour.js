@@ -1,7 +1,7 @@
 // Rundgang beim allerersten Öffnen: ein paar Karten, jederzeit überspringbar.
 // Unter dem Zahnrad („Rundgang ansehen“) wieder aufrufbar.
 // `stand` = Version, in der die Karte zuletzt inhaltlich angepasst wurde (prüft scripts/check-help.js).
-import { dialog } from './ui.js?v=0.2.0';
+import { dialog } from './ui.js?v=0.2.1';
 
 export const STEPS = [
   {
@@ -9,8 +9,8 @@ export const STEPS = [
     text: 'Mal ein Verkaufsfenster mit zwei Getränken, mal ein Sportheim mit Fassbier, Currywurst und Pommes. Hier seht ihr, <strong>was es wo gibt und wie gut es ist</strong>.',
   },
   {
-    id: 'wo', stand: '0.2.0', icon: '📍', title: 'Wo bin ich?',
-    text: 'Am Platz ein Tipp auf <strong>Wo bin ich?</strong>, und der nächste Platz steht ganz oben. Fehlt er noch, legst du ihn mit einem Tipp an.',
+    id: 'wo', stand: '0.2.1', icon: '📍', title: 'Wo bin ich?',
+    text: 'Am Platz ein Tipp auf <strong>Wo bin ich?</strong>, und der nächste Platz steht ganz oben. Fehlt er noch, legst du ihn gleich an – vor Ort oder später von daheim auf der Karte.',
   },
   {
     id: 'bewerten', stand: '0.1.0', icon: '⭐', title: 'In 30 Sekunden bewertet',

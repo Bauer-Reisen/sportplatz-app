@@ -2,9 +2,15 @@
 // Wer die App neu hat, bekommt stattdessen den Rundgang.
 // Neueste zuerst; nur Änderungen, die man sieht und kennen sollte (keine Reparaturen).
 // Jeder Eintrag nennt in `karte` die Rundgang-Karte, die ihn erklärt, oder 'klein' (prüft scripts/check-help.js).
-import { dialog } from './ui.js?v=0.2.0';
+import { dialog } from './ui.js?v=0.2.1';
 
 export const NEWS = [
+  {
+    v: '0.2.1', karte: 'wo', title: 'Plätze auch von daheim anlegen',
+    items: [
+      'Beim Anlegen wählst du jetzt: <strong>📍 Ich bin gerade dort</strong> oder <strong>🗺️ Auf der Karte zeigen</strong>. Ort suchen, auf den Sportplatz tippen – fertig.',
+    ],
+  },
   {
     v: '0.2.0', karte: 'wo', title: 'Die Plätze sind da',
     items: [
