@@ -21,6 +21,8 @@
 - [x] **5 – Karte** (Version 0.3.0): alle Plätze, grün ≥4, gelb ≥3, rot <3, grau zu wenige; Popup mit Link; Wo bin ich.
 - Alles lokal bei 375 px geprüft (Server-Tests per curl: Sperre, Prüfungen, ✓/✗/?, Melden, Verwaltung, Notbremse, fremde Herkunft 403). Online: Schema eingespielt, Worker deployt.
 
+- **0.3.2** (16.11.2026): Platzsuche in Liste/Bewerten verzeiht Tippfehler (docs/js/suche.js, 1 Buchstabe ab 4 Zeichen, 2 ab 8). Nicht gefunden → „Auf der Karte suchen und anlegen“ (#/neu/<text>, sucht gleich). Kartensuche warnt, wenn alle Treffer >80 km von Unterfranken-Mitte (Tippfehler; Photon findet „Anshausen“ ≠ Arnshausen).
+
 ## Als Nächstes
 - Nutzerin testet alles nach der Testliste (inkl. iPhone-Test Abschnitt 2). Secret ADMIN_CODE ist gesetzt (16.11.2026, geprüft: health verwaltung:true, falscher Code → 401).
 - Danach: Rückmeldungen einarbeiten, Testplätze über Verwaltung ausblenden.

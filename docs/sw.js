@@ -3,14 +3,14 @@
 // Ohne Netz oder bei schwachem Netz am Platz: die gespeicherte Kopie.
 // Daten aus der Datenbank (anderer Server) werden hier NICHT gespeichert.
 
-const VERSION = '0.3.1';
+const VERSION = '0.3.2';
 const CACHE = 'halbzeit-' + VERSION;
 const DATEIEN = [
   './', 'index.html', 'manifest.webmanifest', 'style.css', 'version.json',
   'js/app.js', 'js/config.js', 'js/store.js', 'js/ui.js', 'js/tabs.js', 'js/tour.js', 'js/news.js', 'js/install.js',
   'js/liste.js', 'js/karte.js', 'js/bewerten.js', 'js/mehr.js',
   'js/api.js', 'js/geo.js', 'js/platz.js', 'js/neu.js', 'js/kartenbaustein.js',
-  'js/angebot.js', 'js/senden.js', 'js/verwaltung.js',
+  'js/angebot.js', 'js/senden.js', 'js/verwaltung.js', 'js/suche.js',
   'icons/icon-192.png', 'icons/apple-touch-icon.png',
   'vendor/leaflet/leaflet.js', 'vendor/leaflet/leaflet.css',
   'vendor/leaflet/images/marker-icon.png', 'vendor/leaflet/images/marker-icon-2x.png', 'vendor/leaflet/images/marker-shadow.png',

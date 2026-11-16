@@ -3,12 +3,13 @@
 //   #/bewerten/<id>          → Sterne (+ freiwillig: Einzelnoten, Angebot, Bierpreis)
 //   #/bewerten/<id>/angebot  → nur Angebot eintragen, ohne Sterne (z. B. als Betreiber)
 // Gesendet wird über die Warteschlange (senden.js): klappt auch ohne Netz, 10 Sekunden „Rückgängig“.
-import { HIER_METER } from './config.js?v=0.3.1';
-import { getPlaetze, findPlatz, getPlatz } from './api.js?v=0.3.1';
-import { locate, pos, posFrisch, meters, fmtDist } from './geo.js?v=0.3.1';
-import { ANGEBOT } from './angebot.js?v=0.3.1';
-import { einreihen, zuruecknehmen, heuteBewertet, neueId, WARTEN_MS } from './senden.js?v=0.3.1';
-import { esc, toast, undoBar } from './ui.js?v=0.3.1';
+import { HIER_METER } from './config.js?v=0.3.2';
+import { getPlaetze, findPlatz, getPlatz } from './api.js?v=0.3.2';
+import { locate, pos, posFrisch, meters, fmtDist } from './geo.js?v=0.3.2';
+import { ANGEBOT } from './angebot.js?v=0.3.2';
+import { einreihen, zuruecknehmen, heuteBewertet, neueId, WARTEN_MS } from './senden.js?v=0.3.2';
+import { esc, toast, undoBar } from './ui.js?v=0.3.2';
+import { platzSuche } from './suche.js?v=0.3.2';
 
 const WORTE = ['', 'Lieber nicht', 'Geht so', 'Ordentlich', 'Gut', 'Top!'];
 const EINZELN = [
@@ -40,12 +41,12 @@ async function waehlen(view) {
   try { plaetze = await getPlaetze(); } catch (ex) { $('#liste').innerHTML = `<li class="muted">${esc(ex.message)}</li>`; }
 
   const zeichnen = () => {
-    const q = $('#suche').value.trim().toLowerCase();
+    const q = $('#suche').value.trim();
     if (!q) { $('#liste').innerHTML = ''; return; }
-    const rows = plaetze.filter((p) => `${p.verein} ${p.ort}`.toLowerCase().includes(q)).slice(0, 30);
+    const rows = platzSuche(plaetze, q).slice(0, 30);
     $('#liste').innerHTML = rows.length
       ? rows.map((p) => `<li><a href="#/bewerten/${esc(p.id)}"><span class="pname">${esc(p.verein)}</span><span class="pmeta">${esc(p.ort)}</span></a></li>`).join('')
-      : '<li class="muted">Nichts gefunden. <a href="#/neu">Platz anlegen</a></li>';
+      : `<li class="nichtda"><p><strong>„${esc(q)}“ ist noch nicht in der App.</strong> Vielleicht hat ihn noch niemand angelegt.</p><a class="btn btn-primary btn-wide" href="#/neu/${encodeURIComponent(q)}">🗺️ Auf der Karte suchen und anlegen</a></li>`;
   };
   const hierZeigen = () => {
     const best = plaetze.map((p) => ({ ...p, m: meters(pos.lat, pos.lon, p.lat, p.lon) })).sort((a, b) => a.m - b.m)[0];

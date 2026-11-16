@@ -1,12 +1,13 @@
 // Seite „Platz anlegen“: Verein und Ort eintippen. Die Lage kommt entweder vom Handy
 // („Ich bin gerade dort“) oder man tippt den Platz auf der Karte an („Auf der Karte zeigen“),
 // z. B. nachträglich von daheim oder als Betreiber.
-import { addPlatz, ApiError, cache } from './api.js?v=0.3.1';
-import { locate, pos, posFrisch } from './geo.js?v=0.3.1';
-import { neueKarte, ortSuchen } from './kartenbaustein.js?v=0.3.1';
-import { esc, dialog, toast } from './ui.js?v=0.3.1';
+import { addPlatz, ApiError, cache } from './api.js?v=0.3.2';
+import { locate, pos, posFrisch, meters } from './geo.js?v=0.3.2';
+import { neueKarte, ortSuchen, START } from './kartenbaustein.js?v=0.3.2';
+import { esc, dialog, toast } from './ui.js?v=0.3.2';
 
-export function render(view) {
+// vorschlag: Suchtext aus der Platzsuche („… ist noch nicht in der App“) – dann gleich auf der Karte suchen
+export function render(view, vorschlag = '') {
   view.innerHTML = `
     <section>
       <a class="back" href="#/">‹ Alle Plätze</a>
@@ -77,7 +78,7 @@ export function render(view) {
     wahl = null;
     $('#lage').innerHTML = `
       <div class="suchzeile">
-        <input type="search" id="ortsuche" placeholder="Ort oder Verein, z. B. Arnshausen" value="${esc($('#ort').value)}" enterkeyhint="search" autocomplete="off">
+        <input type="search" id="ortsuche" placeholder="Ort oder Verein, z. B. Arnshausen" value="${esc(vorschlag || $('#ort').value)}" enterkeyhint="search" autocomplete="off">
         <button type="button" class="btn" id="suchen">Suchen</button>
       </div>
       <div id="treffer"></div>
@@ -89,9 +90,12 @@ export function render(view) {
       $('#treffer').innerHTML = '<p class="muted small">Suche …</p>';
       try {
         const rows = await ortSuchen(text);
-        if (!rows.length) { $('#treffer').innerHTML = '<p class="small">Nichts gefunden. Probier nur den Ortsnamen, z. B. „Arnshausen“ – oder schieb die Karte selbst hin.</p>'; return; }
-        if (rows.length === 1) { $('#treffer').innerHTML = ''; springen(rows[0]); return; }
-        $('#treffer').innerHTML = `<ul class="treffer">${rows.map((r, i) => `<li><button type="button" class="link" data-i="${i}">${r.sport ? '⚽' : '📍'} ${esc(r.name)}</button></li>`).join('')}</ul>`;
+        if (!rows.length) { $('#treffer').innerHTML = '<p class="small">Nichts gefunden. Stimmt die Schreibweise? Probier nur den Ortsnamen – oder schieb die Karte selbst hin.</p>'; return; }
+        // Nur Orte außerhalb von Unterfranken (über 80 km von der Mitte)? Dann ist es wohl ein Tippfehler
+        const weit = rows.every((r) => meters(START.lat, START.lon, r.lat, r.lon) > 80_000);
+        const hinweis = weit ? '<p class="warn small">Nur weit entfernte Orte gefunden. Stimmt die Schreibweise? Fehlt vielleicht ein Buchstabe?</p>' : '';
+        if (rows.length === 1 && !weit) { $('#treffer').innerHTML = ''; springen(rows[0]); return; }
+        $('#treffer').innerHTML = hinweis + `<ul class="treffer">${rows.map((r, i) => `<li><button type="button" class="link" data-i="${i}">${r.sport ? '⚽' : '📍'} ${esc(r.name)}</button></li>`).join('')}</ul>`;
         $('#treffer').querySelectorAll('[data-i]').forEach((b) => b.addEventListener('click', () => { $('#treffer').innerHTML = ''; springen(rows[b.dataset.i]); }));
       } catch (ex) {
         $('#treffer').innerHTML = `<p class="small">${esc(ex.message)}</p>`;
@@ -121,7 +125,7 @@ export function render(view) {
       err.textContent = '';
     };
     map.on('click', (e) => nadelSetzen(e.latlng.lat, e.latlng.lng));
-    if ($('#ortsuche').value.trim().length >= 2 && !posFrisch()) suchen();
+    if ($('#ortsuche').value.trim().length >= 2 && (vorschlag || !posFrisch())) suchen();
   }
   let nadelSetzen = () => {};
   function springen(r) {
@@ -134,8 +138,9 @@ export function render(view) {
     }
   }
 
-  if (posFrisch()) modusSetzen('hier');
-  $('#verein').focus();
+  if (vorschlag) modusSetzen('karte');
+  else if (posFrisch()) modusSetzen('hier');
+  if (!vorschlag) $('#verein').focus();
 
   // ---------- Anlegen ----------
   const senden = async (trotzdem = false) => {

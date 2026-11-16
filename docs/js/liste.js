@@ -1,9 +1,10 @@
 // Seite „Liste“: alle Plätze, Suche und „Wo bin ich?“.
-import { HIER_METER } from './config.js?v=0.3.1';
-import { getPlaetze, cache } from './api.js?v=0.3.1';
-import { locate, pos, posFrisch, meters, fmtDist } from './geo.js?v=0.3.1';
-import { esc, zahl } from './ui.js?v=0.3.1';
-import { installBanner, wireInstall } from './install.js?v=0.3.1';
+import { HIER_METER } from './config.js?v=0.3.2';
+import { getPlaetze, cache } from './api.js?v=0.3.2';
+import { locate, pos, posFrisch, meters, fmtDist } from './geo.js?v=0.3.2';
+import { esc, zahl } from './ui.js?v=0.3.2';
+import { platzSuche } from './suche.js?v=0.3.2';
+import { installBanner, wireInstall } from './install.js?v=0.3.2';
 
 let suche = ''; // bleibt beim Seitenwechsel erhalten
 
@@ -28,15 +29,15 @@ export async function render(view) {
   const zeichnen = () => {
     const q = suche.trim().toLowerCase();
     let rows = plaetze.map((p) => ({ ...p, m: posFrisch() ? meters(pos.lat, pos.lon, p.lat, p.lon) : null }));
-    if (q) rows = rows.filter((p) => `${p.verein} ${p.ort}`.toLowerCase().includes(q));
-    if (posFrisch()) rows.sort((a, b) => a.m - b.m);
+    if (q) rows = platzSuche(rows, q);
+    else if (posFrisch()) rows.sort((a, b) => a.m - b.m);
     $('#liste').innerHTML = rows.length
       ? rows.map((p) => `
         <li><a href="#/platz/${esc(p.id)}">
           <span class="pname">${esc(p.verein)}</span>
           <span class="pmeta">${esc(p.ort)}${p.m != null ? ` · ${fmtDist(p.m)}` : ''}${p.schnitt != null ? ` · <span class="gold">★</span> ${zahl(p.schnitt)} (${p.n})` : p.n ? ` · ${p.n} ${p.n === 1 ? 'Bewertung' : 'Bewertungen'}` : ''}</span>
         </a></li>`).join('')
-      : `<li class="muted">${q ? 'Nichts gefunden. Fehlt der Platz? Dann leg ihn unten an.' : 'Noch keine Plätze. Leg den ersten an, wenn du am Platz bist.'}</li>`;
+      : q ? `<li class="nichtda"><p><strong>„${esc(suche.trim())}“ ist noch nicht in der App.</strong> Vielleicht hat ihn noch niemand angelegt.</p><a class="btn btn-primary btn-wide" href="#/neu/${encodeURIComponent(suche.trim())}">🗺️ Auf der Karte suchen und anlegen</a></li>` : '<li class="muted">Noch keine Plätze. Leg den ersten an, wenn du am Platz bist.</li>';
     $('#status').textContent = cache.offline ? 'Ohne Netz – das ist die zuletzt geladene Liste.' : `${plaetze.length} ${plaetze.length === 1 ? 'Platz' : 'Plätze'}`;
   };
 
