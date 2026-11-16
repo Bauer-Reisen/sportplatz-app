@@ -1,5 +1,5 @@
 // Hinweis „Auf den Home-Bildschirm“ – nur im Browser, nicht in der installierten App.
-import { store } from './store.js?v=0.2.1';
+import { store } from './store.js?v=0.3.0';
 
 export const standalone = () => matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
 export const isIos = () => /iPhone|iPad|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);

@@ -35,18 +35,50 @@ export async function neueKarte(el, { lat = START.lat, lon = START.lon, zoom = S
 }
 
 // Ort suchen (OpenStreetMap / Nominatim). Es wird nur der Suchtext übertragen.
+// Zuerst Photon (komoot): verzeiht Tippfehler und Wortreihenfolge und kennt oft den Sportplatz selbst.
+// Findet Photon nichts, ohne Vereinskürzel nochmal – und zuletzt Nominatim (OpenStreetMap).
+// Ergebnis: [{ name, lat, lon, sport }] – `sport` = Sportplatz/Sportheim, dann setzt die App gleich die Nadel.
+const SPORT = new Set(['pitch', 'sports_centre', 'stadium', 'sport', 'sports_hall', 'recreation_ground']);
+const KUERZEL = /\b(1\.|tsv|tsvgg|sv|fc|djk|spvgg|tus|sc|fv|sg|asv|vfb|vfl|tsg|tv|ssv|esv|sportplatz|sportheim|sportgelände|e\.?\s?v\.?)\b/gi;
+
+async function photon(q) {
+  const p = new URLSearchParams({ q, lang: 'de', limit: '8', lat: '50.0', lon: '10.0', location_bias_scale: '0.3' });
+  const res = await fetch(`https://photon.komoot.io/api/?${p}`);
+  if (!res.ok) throw new Error(`photon ${res.status}`);
+  const { features = [] } = await res.json();
+  return features
+    .filter((f) => f.properties.countrycode === 'DE')
+    .map((f) => {
+      const x = f.properties;
+      const wo = [x.district || x.city || x.locality, x.county].filter((s) => s && s !== x.name);
+      return { name: [x.name, ...wo].filter(Boolean).join(', '), lat: f.geometry.coordinates[1], lon: f.geometry.coordinates[0], sport: SPORT.has(x.osm_value) || x.osm_key === 'leisure' && /sport|pitch/.test(x.osm_value) };
+    });
+}
+
+async function nominatim(q) {
+  const p = new URLSearchParams({ q, format: 'jsonv2', countrycodes: 'de', limit: '5', 'accept-language': 'de', viewbox: '8.9,50.6,10.9,49.4' });
+  const res = await fetch(`https://nominatim.openstreetmap.org/search?${p}`);
+  if (!res.ok) throw new Error(`nominatim ${res.status}`);
+  return (await res.json()).map((r) => ({ name: r.display_name.split(',').slice(0, 3).join(','), lat: Number(r.lat), lon: Number(r.lon), sport: SPORT.has(r.type) }));
+}
+
 export async function ortSuchen(text) {
-  const q = new URLSearchParams({
-    q: text, format: 'jsonv2', countrycodes: 'de', limit: '5', 'accept-language': 'de',
-    viewbox: '8.9,50.6,10.9,49.4', // Unterfranken bevorzugen
-  });
-  let res;
-  try {
-    res = await fetch(`https://nominatim.openstreetmap.org/search?${q}`);
-  } catch {
-    throw new Error('Die Suche geht gerade nicht. Kein Netz?');
+  const ohne = text.replace(KUERZEL, ' ').replace(/[\d/]+/g, ' ').replace(/\s+/g, ' ').trim();
+  const versuche = [() => photon(text)];
+  if (ohne && ohne.toLowerCase() !== text.toLowerCase()) versuche.push(() => photon(ohne));
+  versuche.push(() => nominatim(text));
+  if (ohne && ohne.toLowerCase() !== text.toLowerCase()) versuche.push(() => nominatim(ohne));
+  let fehler = 0;
+  for (const v of versuche) {
+    try {
+      const rows = await v();
+      if (rows.length) {
+        // gleiche Stellen nur einmal
+        const seen = new Set();
+        return rows.filter((r) => { const k = `${r.lat.toFixed(3)},${r.lon.toFixed(3)}`; if (seen.has(k)) return false; seen.add(k); return true; }).slice(0, 6);
+      }
+    } catch { fehler++; }
   }
-  if (!res.ok) throw new Error('Die Suche geht gerade nicht. Bitte gleich nochmal.');
-  const rows = await res.json();
-  return rows.map((r) => ({ name: r.display_name.split(',').slice(0, 3).join(','), lat: Number(r.lat), lon: Number(r.lon), typ: r.type }));
+  if (fehler === versuche.length) throw new Error('Die Suche geht gerade nicht. Kein Netz?');
+  return [];
 }

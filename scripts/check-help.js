@@ -39,6 +39,11 @@ for (const f of readdirSync('docs/js').filter((f) => f.endsWith('.js'))) {
   if (!sw.includes(`'js/${f}'`)) errs.push(`sw.js: js/${f} fehlt in der Liste (sonst offline nicht da)`);
 }
 
+// Angebots-Liste: App und Server müssen dieselben Schlüssel kennen
+const keysApp = [...read('docs/js/angebot.js').matchAll(/k: '(\w+)'/g)].map((m) => m[1]).join(',');
+const keysSrv = ((read('worker/index.js').match(/const ANGEBOT = \[([^\]]*)\]/) || [])[1] || '').match(/\w+/g)?.join(',');
+if (keysApp !== keysSrv) errs.push(`Angebot: App (${keysApp}) und Server (${keysSrv}) passen nicht zusammen`);
+
 if (errs.length) {
   console.error('\n✋ Hilfe/Versionen nicht in Ordnung:\n   ' + errs.join('\n   ') + '\n');
   process.exit(1);

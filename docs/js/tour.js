@@ -1,7 +1,7 @@
 // Rundgang beim allerersten Öffnen: ein paar Karten, jederzeit überspringbar.
 // Unter dem Zahnrad („Rundgang ansehen“) wieder aufrufbar.
 // `stand` = Version, in der die Karte zuletzt inhaltlich angepasst wurde (prüft scripts/check-help.js).
-import { dialog } from './ui.js?v=0.2.1';
+import { dialog } from './ui.js?v=0.3.0';
 
 export const STEPS = [
   {
@@ -13,8 +13,16 @@ export const STEPS = [
     text: 'Am Platz ein Tipp auf <strong>Wo bin ich?</strong>, und der nächste Platz steht ganz oben. Fehlt er noch, legst du ihn gleich an – vor Ort oder später von daheim auf der Karte.',
   },
   {
-    id: 'bewerten', stand: '0.1.0', icon: '⭐', title: 'In 30 Sekunden bewertet',
-    text: 'Ein Tipp für die <strong>Gesamt-Sterne</strong> reicht. Bier, Essen, Preise, Stimmung und was es gibt sind freiwillig. Geht auch mit einer Hand – die andere hält das Bier.',
+    id: 'bewerten', stand: '0.3.0', icon: '⭐', title: 'In 30 Sekunden bewertet',
+    text: 'Unten auf <strong>Bewerten</strong>, Platz wählen, <strong>Gesamt-Sterne</strong> antippen, Senden – fertig. Bier, Essen, Preise und Stimmung sind freiwillig. Warst du letzte Woche dort? Dann „Vor ein paar Tagen“ wählen.',
+  },
+  {
+    id: 'angebot', stand: '0.3.0', icon: '🌭', title: 'Was gibt es hier?',
+    text: 'Unter „Mehr angeben“ tippst du an, was es gibt: <strong>✓</strong> gibt es, <strong>✗</strong> gibt es nicht. Es zählen die letzten 5 Angaben – widersprechen sie sich, steht da <strong>?</strong>. Wer nur das Angebot kennt (z. B. der Wirt), nimmt <strong>Nur Angebot eintragen</strong>.',
+  },
+  {
+    id: 'karte', stand: '0.3.0', icon: '🗺️', title: 'Alle Plätze auf der Karte',
+    text: 'Unter <strong>Karte</strong> siehst du alle Plätze: <strong>grün</strong> ab 4 Sternen, <strong>gelb</strong> ab 3, <strong>rot</strong> darunter, <strong>grau</strong> = noch zu wenige Bewertungen.',
   },
   {
     id: 'netz', stand: '0.1.0', icon: '📶', title: 'Kein Netz am Platz?',

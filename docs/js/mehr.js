@@ -1,8 +1,8 @@
 // Seite „Mehr“ (Zahnrad oben): Rundgang, Neuigkeiten, Home-Bildschirm, Version.
-import { VERSION, APP_NAME } from './config.js?v=0.2.1';
-import { installCard } from './install.js?v=0.2.1';
-import { runTour } from './tour.js?v=0.2.1';
-import { NEWS, showNews } from './news.js?v=0.2.1';
+import { VERSION, APP_NAME } from './config.js?v=0.3.0';
+import { installCard } from './install.js?v=0.3.0';
+import { runTour } from './tour.js?v=0.3.0';
+import { NEWS, showNews } from './news.js?v=0.3.0';
 
 export function render(view) {
   view.innerHTML = `
@@ -16,10 +16,17 @@ export function render(view) {
       </div>
       <div class="card card-soft">
         <h3>Deine Daten</h3>
-        <p class="small">Die App speichert keinen Namen, kein Konto und keinen Standort. Im Handy merkt sie sich nur Kleinigkeiten, z.&nbsp;B. ob du den Rundgang schon gesehen hast.</p>
+        <ul class="small daten">
+          <li><strong>Kein Konto, kein Name, keine E-Mail.</strong> Bewertungen sind anonym.</li>
+          <li><strong>Standort</strong> nur, wenn du „Wo bin ich?“ tippst – er bleibt im Handy und wird nicht gespeichert. Gespeichert wird nur die Lage des Sportplatzes.</li>
+          <li>Dein Handy bekommt eine <strong>Zufallsnummer</strong>, damit pro Platz nur ein Eintrag am Tag geht. Der Server merkt sich davon nur einen Prüfwert, aus dem man nichts zurückrechnen kann.</li>
+          <li><strong>Ortssuche:</strong> Der Suchtext geht an komoot (Photon) bzw. OpenStreetMap. <strong>Karte:</strong> Kartenbilder vom Bundesamt für Kartographie (BKG).</li>
+          <li>Die App liegt bei GitHub, die Bewertungen bei Cloudflare in Westeuropa.</li>
+        </ul>
       </div>
       <footer class="foot">
         <p class="muted small">${APP_NAME} · Version ${VERSION}</p>
+        <a class="link small muted" href="#/verwaltung">Verwaltung</a>
       </footer>
     </section>`;
   view.querySelector('[data-act=tour]').addEventListener('click', () => runTour());

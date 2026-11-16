@@ -42,6 +42,33 @@ export function dialog({ title, body = '', buttons = [{ label: 'OK', value: true
   });
 }
 
+// Meldung mit „Rückgängig“-Knopf. Liefert true, wenn rückgängig gemacht wurde.
+export function undoBar(text, ms, onUndo) {
+  return new Promise((resolve) => {
+    const t = document.createElement('div');
+    t.className = 'toast undo';
+    t.setAttribute('role', 'status');
+    t.innerHTML = `<span>${esc(text)}</span><button type="button">Rückgängig</button>`;
+    document.body.append(t);
+    requestAnimationFrame(() => t.classList.add('show'));
+    let fertig = false;
+    const ende = (undo) => {
+      if (fertig) return;
+      fertig = true;
+      t.classList.remove('show');
+      setTimeout(() => t.remove(), 300);
+      if (undo) onUndo?.();
+      resolve(undo);
+    };
+    t.querySelector('button').addEventListener('click', () => ende(true));
+    setTimeout(() => ende(false), ms);
+  });
+}
+
+// Zahlen und Daten auf Deutsch: 4.2 → „4,2“, 2026-11-16 → „16.11.2026“
+export const zahl = (x, n = 1) => (x == null ? '' : Number(x).toFixed(n).replace('.', ','));
+export const datum = (iso) => (iso ? iso.split('-').reverse().join('.') : '');
+
 // Kurze Meldung unten am Bildschirm
 export function toast(text, ms = 3000) {
   const t = document.createElement('div');

@@ -203,3 +203,78 @@ input:focus { outline: 3px solid var(--accent); outline-offset: 1px; border-colo
   max-width: calc(100vw - 32px); font-size: 1rem; font-weight: 600; z-index: 10;
 }
 .toast.show { transform: translate(-50%, 0); opacity: 1; }
+
+/* ---------- Bewerten ---------- */
+.stars { display: flex; gap: 4px; }
+.stars button { font: inherit; font-size: 1.9rem; line-height: 1; color: #c9d1cc; background: none; border: 0; padding: 6px 4px; min-width: 44px; min-height: 48px; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+.stars button.on { color: var(--gold); }
+.stars.big { justify-content: space-between; max-width: 360px; }
+.stars.big button { font-size: 3rem; min-width: 56px; min-height: 64px; }
+.sternwort { font-weight: 700; color: var(--ink-soft); min-height: 1.5em; margin: 2px 0 14px; }
+.mehr { padding: 0; margin-top: 4px; }
+.mehr summary { padding: 16px 18px; font-weight: 700; cursor: pointer; min-height: 56px; }
+.mehr[open] { padding: 0 18px 18px; }
+.mehr[open] summary { margin: 0 -18px 4px; }
+.mehr hr { border: 0; border-top: 1.5px solid var(--line); margin: 14px 0; }
+.einzel { display: flex; align-items: center; justify-content: space-between; gap: 4px; }
+.einzel .stars { gap: 0; }
+.einzel .stars button { min-width: 38px; padding: 6px 2px; font-size: 1.7rem; }
+.einzel > span { font-weight: 700; flex: 0 0 auto; white-space: nowrap; font-size: .95rem; }
+.kacheln { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin: 8px 0 4px; }
+.kachel { position: relative; display: flex; align-items: center; gap: 8px; text-align: left; font: inherit; font-size: .98rem; font-weight: 650; padding: 10px 30px 10px 10px; min-height: 56px; border: 1.5px solid var(--line); border-radius: 12px; background: #fff; color: var(--ink); cursor: pointer; -webkit-tap-highlight-color: transparent; }
+.kachel .ke { font-size: 1.4rem; }
+.kachel .kz { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); font-weight: 900; font-size: 1.2rem; }
+.kachel.ja { border: 2.5px solid var(--accent); background: var(--accent-soft); }
+.kachel.ja .kz { color: var(--accent); }
+.kachel.nein { border: 2.5px solid var(--error); background: #fbe9e7; }
+.kachel.nein .kt { text-decoration: line-through; }
+.kachel.nein .kz { color: var(--error); }
+.pill { display: inline-block; border-radius: 999px; padding: 0 8px; font-weight: 700; }
+.pill.ja { background: var(--accent-soft); color: var(--accent); }
+.pill.nein { background: #fbe9e7; color: var(--error); }
+.preiszeile { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.preiszeile input { width: 110px; flex: none; }
+.euro { font-weight: 700; }
+.seg-klein { grid-template-columns: auto auto; margin: 0; }
+.seg-klein .btn { min-height: 52px; padding: 8px 14px; }
+.sendeleiste { position: sticky; bottom: calc(env(safe-area-inset-bottom) + var(--tabbar-h) + 8px); z-index: 3; padding-top: 6px; }
+.undo { display: flex; align-items: center; gap: 14px; width: max-content; }
+.undo button { font: inherit; font-weight: 800; color: #9be3b0; background: none; border: 0; padding: 8px 4px; min-height: 44px; cursor: pointer; }
+
+/* ---------- Platzseite ---------- */
+.gold { color: var(--gold); }
+.grau { color: #c9d1cc; }
+.sterne { letter-spacing: 1px; font-size: 1.2rem; }
+.sterne.klein { font-size: 1rem; }
+.note-gross { display: flex; align-items: center; gap: 14px; margin-bottom: 10px; }
+.note-gross .zahl { font-size: 2.6rem; font-weight: 800; line-height: 1; }
+.einzelnoten, .angebot, .eintraege, .daten { list-style: none; padding: 0; margin: 0 0 8px; }
+.einzelnoten li { display: flex; justify-content: space-between; padding: 6px 0; border-top: 1px solid var(--line); }
+.angebot li { padding: 5px 0; }
+.angebot .ok { color: var(--accent); font-weight: 900; }
+.nein { color: var(--error); font-weight: 800; }
+.angebot .unklar { color: #8a5a00; font-weight: 900; }
+.alt { color: #8a5a00; font-weight: 600; }
+.bierpreis { font-size: 1.05rem; }
+.eintraege li { display: flex; align-items: center; flex-wrap: wrap; gap: 4px 10px; padding: 6px 0; border-top: 1px solid var(--line); }
+.eintraege .melden { margin-left: auto; padding: 6px 4px; min-height: 40px; color: var(--muted); }
+.daten li { padding: 4px 0; }
+.gruende { display: grid; gap: 4px; margin-bottom: 8px; }
+.grund { display: flex; align-items: center; gap: 10px; min-height: 48px; font-weight: 600; }
+.grund input { width: 22px; height: 22px; accent-color: var(--accent); }
+
+/* ---------- Karte ---------- */
+.kartenkopf { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 8px; }
+.kartenkopf h1 { margin: 0; }
+.kartenkopf .btn { min-height: 48px; padding: 8px 14px; font-size: 1rem; }
+.grosskarte { height: calc(100dvh - 300px); min-height: 320px; border-radius: 12px; border: 1.5px solid var(--line); z-index: 0; }
+.legende { display: flex; flex-wrap: wrap; gap: 4px 14px; margin: 8px 0 0; }
+.legende i { display: inline-block; width: 12px; height: 12px; border-radius: 50%; vertical-align: -1px; }
+.leaflet-popup-content { font-size: 1rem; line-height: 1.5; }
+.leaflet-popup-content a { font-weight: 700; color: var(--accent); }
+
+/* ---------- Verwaltung ---------- */
+.card-warn { border-color: var(--error); background: #fbe9e7; }
+.vw p { margin-bottom: 6px; }
+.vw-knoepfe { display: flex; gap: 8px; flex-wrap: wrap; }
+.vw-knoepfe .btn { min-height: 48px; padding: 8px 12px; font-size: .95rem; }

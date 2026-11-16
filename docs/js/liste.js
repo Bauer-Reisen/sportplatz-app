@@ -1,9 +1,9 @@
 // Seite „Liste“: alle Plätze, Suche und „Wo bin ich?“.
-import { HIER_METER } from './config.js?v=0.2.1';
-import { getPlaetze, cache } from './api.js?v=0.2.1';
-import { locate, pos, posFrisch, meters, fmtDist } from './geo.js?v=0.2.1';
-import { esc } from './ui.js?v=0.2.1';
-import { installBanner, wireInstall } from './install.js?v=0.2.1';
+import { HIER_METER } from './config.js?v=0.3.0';
+import { getPlaetze, cache } from './api.js?v=0.3.0';
+import { locate, pos, posFrisch, meters, fmtDist } from './geo.js?v=0.3.0';
+import { esc, zahl } from './ui.js?v=0.3.0';
+import { installBanner, wireInstall } from './install.js?v=0.3.0';
 
 let suche = ''; // bleibt beim Seitenwechsel erhalten
 
@@ -34,7 +34,7 @@ export async function render(view) {
       ? rows.map((p) => `
         <li><a href="#/platz/${esc(p.id)}">
           <span class="pname">${esc(p.verein)}</span>
-          <span class="pmeta">${esc(p.ort)}${p.m != null ? ` · ${fmtDist(p.m)}` : ''}</span>
+          <span class="pmeta">${esc(p.ort)}${p.m != null ? ` · ${fmtDist(p.m)}` : ''}${p.schnitt != null ? ` · <span class="gold">★</span> ${zahl(p.schnitt)} (${p.n})` : p.n ? ` · ${p.n} ${p.n === 1 ? 'Bewertung' : 'Bewertungen'}` : ''}</span>
         </a></li>`).join('')
       : `<li class="muted">${q ? 'Nichts gefunden. Fehlt der Platz? Dann leg ihn unten an.' : 'Noch keine Plätze. Leg den ersten an, wenn du am Platz bist.'}</li>`;
     $('#status').textContent = cache.offline ? 'Ohne Netz – das ist die zuletzt geladene Liste.' : `${plaetze.length} ${plaetze.length === 1 ? 'Platz' : 'Plätze'}`;

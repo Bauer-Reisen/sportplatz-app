@@ -1,10 +1,10 @@
 // Seite „Platz anlegen“: Verein und Ort eintippen. Die Lage kommt entweder vom Handy
 // („Ich bin gerade dort“) oder man tippt den Platz auf der Karte an („Auf der Karte zeigen“),
 // z. B. nachträglich von daheim oder als Betreiber.
-import { addPlatz, ApiError, cache } from './api.js?v=0.2.1';
-import { locate, pos, posFrisch } from './geo.js?v=0.2.1';
-import { neueKarte, ortSuchen } from './kartenbaustein.js?v=0.2.1';
-import { esc, dialog, toast } from './ui.js?v=0.2.1';
+import { addPlatz, ApiError, cache } from './api.js?v=0.3.0';
+import { locate, pos, posFrisch } from './geo.js?v=0.3.0';
+import { neueKarte, ortSuchen } from './kartenbaustein.js?v=0.3.0';
+import { esc, dialog, toast } from './ui.js?v=0.3.0';
 
 export function render(view) {
   view.innerHTML = `
@@ -77,7 +77,7 @@ export function render(view) {
     wahl = null;
     $('#lage').innerHTML = `
       <div class="suchzeile">
-        <input type="search" id="ortsuche" placeholder="Ort suchen, z. B. Höchberg" value="${esc($('#ort').value)}" enterkeyhint="search" autocomplete="off">
+        <input type="search" id="ortsuche" placeholder="Ort oder Verein, z. B. Arnshausen" value="${esc($('#ort').value)}" enterkeyhint="search" autocomplete="off">
         <button type="button" class="btn" id="suchen">Suchen</button>
       </div>
       <div id="treffer"></div>
@@ -89,9 +89,9 @@ export function render(view) {
       $('#treffer').innerHTML = '<p class="muted small">Suche …</p>';
       try {
         const rows = await ortSuchen(text);
-        if (!rows.length) { $('#treffer').innerHTML = '<p class="small">Nichts gefunden. Anders schreiben?</p>'; return; }
+        if (!rows.length) { $('#treffer').innerHTML = '<p class="small">Nichts gefunden. Probier nur den Ortsnamen, z. B. „Arnshausen“ – oder schieb die Karte selbst hin.</p>'; return; }
         if (rows.length === 1) { $('#treffer').innerHTML = ''; springen(rows[0]); return; }
-        $('#treffer').innerHTML = `<ul class="treffer">${rows.map((r, i) => `<li><button type="button" class="link" data-i="${i}">${esc(r.name)}</button></li>`).join('')}</ul>`;
+        $('#treffer').innerHTML = `<ul class="treffer">${rows.map((r, i) => `<li><button type="button" class="link" data-i="${i}">${r.sport ? '⚽' : '📍'} ${esc(r.name)}</button></li>`).join('')}</ul>`;
         $('#treffer').querySelectorAll('[data-i]').forEach((b) => b.addEventListener('click', () => { $('#treffer').innerHTML = ''; springen(rows[b.dataset.i]); }));
       } catch (ex) {
         $('#treffer').innerHTML = `<p class="small">${esc(ex.message)}</p>`;
@@ -113,18 +113,25 @@ export function render(view) {
         .bindTooltip(esc(p.verein)).addTo(map);
     }
     let nadel = null;
-    map.on('click', (e) => {
-      const { lat, lng } = e.latlng;
-      wahl = { lat, lon: lng, acc: null };
-      if (nadel) nadel.setLatLng(e.latlng);
-      else nadel = L.marker(e.latlng).addTo(map);
-      $('#wahl').innerHTML = '✅ <strong>Stelle gewählt.</strong> Falsch? Einfach woanders hintippen.';
+    nadelSetzen = (lat, lon, text = 'Stelle gewählt.') => {
+      wahl = { lat, lon, acc: null };
+      if (nadel) nadel.setLatLng([lat, lon]);
+      else nadel = L.marker([lat, lon]).addTo(map);
+      $('#wahl').innerHTML = `✅ <strong>${text}</strong> Falsch? Einfach woanders hintippen.`;
       err.textContent = '';
-    });
+    };
+    map.on('click', (e) => nadelSetzen(e.latlng.lat, e.latlng.lng));
     if ($('#ortsuche').value.trim().length >= 2 && !posFrisch()) suchen();
   }
+  let nadelSetzen = () => {};
   function springen(r) {
-    if (karte) karte.map.setView([r.lat, r.lon], 14);
+    if (!karte) return;
+    if (r.sport) {
+      karte.map.setView([r.lat, r.lon], 17);
+      nadelSetzen(r.lat, r.lon, 'Sportplatz gefunden.');
+    } else {
+      karte.map.setView([r.lat, r.lon], 14);
+    }
   }
 
   if (posFrisch()) modusSetzen('hier');

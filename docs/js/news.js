@@ -2,9 +2,27 @@
 // Wer die App neu hat, bekommt stattdessen den Rundgang.
 // Neueste zuerst; nur Änderungen, die man sieht und kennen sollte (keine Reparaturen).
 // Jeder Eintrag nennt in `karte` die Rundgang-Karte, die ihn erklärt, oder 'klein' (prüft scripts/check-help.js).
-import { dialog } from './ui.js?v=0.2.1';
+import { dialog } from './ui.js?v=0.3.0';
 
 export const NEWS = [
+  {
+    v: '0.3.0', karte: 'bewerten', title: 'Jetzt wird bewertet ⭐',
+    items: [
+      'Unten auf <strong>Bewerten</strong> oder auf einer Platzseite <strong>⭐ Jetzt bewerten</strong>. Gesamt-Sterne reichen.',
+      'Kein Netz? Die Bewertung wartet im Handy und geht von selbst raus. 10 Sekunden lang kannst du sie noch <strong>rückgängig</strong> machen.',
+    ],
+  },
+  {
+    v: '0.3.0', karte: 'angebot', title: 'Was gibt es wo?',
+    items: [
+      'Jede Platzseite zeigt jetzt, was es gibt: <strong>✓</strong>, <strong>✗</strong> oder <strong>?</strong> bei widersprüchlichen Angaben – dazu den Bierpreis.',
+      'Stimmt ein Eintrag nicht? Auf <strong>Melden</strong> tippen. Ab 3 Meldungen wird er ausgeblendet.',
+    ],
+  },
+  {
+    v: '0.3.0', karte: 'karte', title: 'Die Karte ist da',
+    items: ['Alle Plätze auf einen Blick, farbig nach Note.'],
+  },
   {
     v: '0.2.1', karte: 'wo', title: 'Plätze auch von daheim anlegen',
     items: [

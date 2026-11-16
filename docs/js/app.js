@@ -1,24 +1,26 @@
 // Einstieg der App: Seitenwechsel, Rundgang beim ersten Öffnen, „Was ist neu?“, Updates, Offline.
-import { VERSION } from './config.js?v=0.2.1';
-import { store } from './store.js?v=0.2.1';
-import { toast } from './ui.js?v=0.2.1';
-import { renderTabs } from './tabs.js?v=0.2.1';
-import { runTour } from './tour.js?v=0.2.1';
-import { unseen, showNews, NEWS } from './news.js?v=0.2.1';
+import { VERSION } from './config.js?v=0.3.0';
+import { store } from './store.js?v=0.3.0';
+import { toast } from './ui.js?v=0.3.0';
+import { renderTabs } from './tabs.js?v=0.3.0';
+import { runTour } from './tour.js?v=0.3.0';
+import { unseen, showNews, NEWS } from './news.js?v=0.3.0';
+import { senderStarten } from './senden.js?v=0.3.0';
 
 const view = document.getElementById('view');
 
 // Jede Seite ist eine eigene Datei und wird erst beim Öffnen geladen.
 const PAGES = {
-  liste: () => import('./liste.js?v=0.2.1'),
-  karte: () => import('./karte.js?v=0.2.1'),
-  bewerten: () => import('./bewerten.js?v=0.2.1'),
-  mehr: () => import('./mehr.js?v=0.2.1'),
-  platz: () => import('./platz.js?v=0.2.1'),
-  neu: () => import('./neu.js?v=0.2.1'),
+  liste: () => import('./liste.js?v=0.3.0'),
+  karte: () => import('./karte.js?v=0.3.0'),
+  bewerten: () => import('./bewerten.js?v=0.3.0'),
+  mehr: () => import('./mehr.js?v=0.3.0'),
+  platz: () => import('./platz.js?v=0.3.0'),
+  neu: () => import('./neu.js?v=0.3.0'),
+  verwaltung: () => import('./verwaltung.js?v=0.3.0'),
 };
 // Unterseiten gehören zu diesem Reiter
-const TAB_OF = { platz: 'liste', neu: 'liste' };
+const TAB_OF = { platz: 'liste', neu: 'liste', verwaltung: 'mehr' };
 
 async function route() {
   const [, page = '', ...rest] = (location.hash || '#/').split('/');
@@ -38,6 +40,12 @@ async function route() {
     view.querySelector('#retry').addEventListener('click', route);
   }
 }
+
+// Ein Eintrag ist raus (oder zurückgenommen): betroffene Seite neu zeichnen
+addEventListener('halbzeit:gesendet', (e) => {
+  const h = location.hash || '#/';
+  if (h === `#/platz/${e.detail}` || h === '#/' || h === '#/karte') route();
+});
 
 addEventListener('hashchange', () => { scrollTo(0, 0); route(); });
 
@@ -79,4 +87,5 @@ if ('serviceWorker' in navigator && location.hostname !== 'localhost') {
 }
 
 checkForUpdate();
+senderStarten();
 route().then(helpOnStart).catch((ex) => { console.error(ex); toast('Da ist etwas schiefgelaufen.'); });
