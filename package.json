@@ -1,13 +1,24 @@
 {
   "name": "sportplatz-app",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "description": "Halbzeit-Check: Sportheime und Verkaufsstände an Amateur-Fußballplätzen bewerten",
   "type": "module",
   "scripts": {
     "start": "node scripts/dev.js",
     "check": "node scripts/check-secrets.js && node scripts/check-privat.js && node scripts/check-help.js",
-    "icons": "node scripts/make-icons.js"
+    "icons": "node scripts/make-icons.js",
+    "worker": "npx wrangler dev --config worker/wrangler.toml --local --port 8788",
+    "deploy-worker": "npx wrangler deploy --config worker/wrangler.toml"
   },
-  "engines": { "node": ">=20" }
+  "engines": {
+    "node": ">=20"
+  },
+  "devDependencies": {
+    "wrangler": "^4.162.0"
+  },
+  "allowScripts": {
+    "workerd@1.20261113.1": true,
+    "esbuild@0.28.2": true
+  }
 }

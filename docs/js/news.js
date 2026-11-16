@@ -2,10 +2,17 @@
 // Wer die App neu hat, bekommt stattdessen den Rundgang.
 // Neueste zuerst; nur Änderungen, die man sieht und kennen sollte (keine Reparaturen).
 // Jeder Eintrag nennt in `karte` die Rundgang-Karte, die ihn erklärt, oder 'klein' (prüft scripts/check-help.js).
-import { dialog } from './ui.js?v=0.1.0';
+import { dialog } from './ui.js?v=0.2.0';
 
 export const NEWS = [
-  // Beispiel: { v: '0.2.0', karte: 'wo', title: 'Plätze', items: ['…'] },
+  {
+    v: '0.2.0', karte: 'wo', title: 'Die Plätze sind da',
+    items: [
+      'Tippe am Platz auf <strong>📍 Wo bin ich?</strong> – der nächste Platz steht ganz oben.',
+      'Fehlt er noch: <strong>➕ Platz fehlt – hier anlegen</strong>. Verein und Ort eintippen, die Lage nimmt die App vom Handy.',
+      'Über die <strong>Suche</strong> findest du jeden Platz auch von daheim, und <strong>In Karten-App öffnen</strong> zeigt dir den Weg.',
+    ],
+  },
 ];
 
 const num = (v) => (v || '0').split('.').map(Number);

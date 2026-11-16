@@ -1,0 +1,24 @@
+# Einstellungen für den Cloudflare Worker „sportplatz“ (Halbzeit-Check).
+# Hier steht NICHTS Geheimes. Der Verwaltungs-Code kommt später im Cloudflare-Dashboard
+# als Secret mit dem Namen ADMIN_CODE dazu.
+
+name = "sportplatz"
+main = "index.js"
+compatibility_date = "2026-06-01"
+
+[vars]
+# Nur diese Websites dürfen den Worker benutzen (durch Komma getrennt).
+ALLOWED_ORIGINS = "https://bauer-reisen.github.io,http://localhost:5810"
+
+# Bremse: höchstens 20 schreibende Anfragen pro Minute und Internet-Anschluss
+[[ratelimits]]
+name = "WRITE_LIMITER"
+namespace_id = "3001"
+  [ratelimits.simple]
+  limit = 20
+  period = 60
+
+[[d1_databases]]
+binding = "DB"
+database_name = "sportplatz"
+database_id = "ed285a76-1872-4df9-a346-0d8acf389dde"

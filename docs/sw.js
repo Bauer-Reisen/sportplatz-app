@@ -3,12 +3,13 @@
 // Ohne Netz oder bei schwachem Netz am Platz: die gespeicherte Kopie.
 // Daten aus der Datenbank (anderer Server) werden hier NICHT gespeichert.
 
-const VERSION = '0.1.0';
+const VERSION = '0.2.0';
 const CACHE = 'halbzeit-' + VERSION;
 const DATEIEN = [
   './', 'index.html', 'manifest.webmanifest', 'style.css', 'version.json',
   'js/app.js', 'js/config.js', 'js/store.js', 'js/ui.js', 'js/tabs.js', 'js/tour.js', 'js/news.js', 'js/install.js',
   'js/liste.js', 'js/karte.js', 'js/bewerten.js', 'js/mehr.js',
+  'js/api.js', 'js/geo.js', 'js/platz.js', 'js/neu.js',
   'icons/icon-192.png', 'icons/apple-touch-icon.png',
 ];
 
