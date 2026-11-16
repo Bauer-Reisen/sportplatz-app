@@ -22,5 +22,5 @@
 - Alles lokal bei 375 px geprüft (Server-Tests per curl: Sperre, Prüfungen, ✓/✗/?, Melden, Verwaltung, Notbremse, fremde Herkunft 403). Online: Schema eingespielt, Worker deployt.
 
 ## Als Nächstes
-- Nutzerin testet alles nach der Testliste (inkl. iPhone-Test Abschnitt 2). Sie setzt Secret ADMIN_CODE im Cloudflare-Dashboard selbst (Health zeigt verwaltung:true, sobald gesetzt).
+- Nutzerin testet alles nach der Testliste (inkl. iPhone-Test Abschnitt 2). Secret ADMIN_CODE ist gesetzt (16.11.2026, geprüft: health verwaltung:true, falscher Code → 401).
 - Danach: Rückmeldungen einarbeiten, Testplätze über Verwaltung ausblenden.
