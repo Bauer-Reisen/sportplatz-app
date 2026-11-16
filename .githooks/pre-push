@@ -1,0 +1,3 @@
+#!/bin/sh
+# Vor jedem Hochladen: nichts Geheimes/Privates, Hilfe und Versionen stimmen.
+npm run check --silent || exit 1

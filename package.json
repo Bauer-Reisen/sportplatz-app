@@ -1,0 +1,13 @@
+{
+  "name": "sportplatz-app",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Halbzeit-Check: Sportheime und Verkaufsstände an Amateur-Fußballplätzen bewerten",
+  "type": "module",
+  "scripts": {
+    "start": "node scripts/dev.js",
+    "check": "node scripts/check-secrets.js && node scripts/check-privat.js && node scripts/check-help.js",
+    "icons": "node scripts/make-icons.js"
+  },
+  "engines": { "node": ">=20" }
+}
