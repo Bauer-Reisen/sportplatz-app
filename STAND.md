@@ -9,14 +9,16 @@
 - Vor jedem `git push` läuft `npm run check` (Hook in `.githooks/`): nichts Geheimes, nichts Privates (eigene Suchwörter in `.privat-woerter.txt`, nicht im Repo), Rundgang/Neuigkeiten/Versionen passen, `sw.js` kennt alle JS-Dateien.
 - Lokal testen: Vorschau `sportplatz` in `Uebergabe-App\.claude\launch.json` (Port 5810). Service Worker läuft auf localhost absichtlich nicht.
 - Neue Version: `node scripts/set-version.js 0.x.0` (setzt config.js, sw.js, version.json, package.json, alle `?v=`).
+- **Worker online:** https://sportplatz.film-app.workers.dev (Version 11b2146c). Erlaubt nur bauer-reisen.github.io und localhost:5810, 20 schreibende Anfragen/Minute je Anschluss, max. 40 neue Plätze/Tag. D1 `sportplatz` (ed285a76-…, Westeuropa), Schema `worker/schema.sql` (online eingespielt).
+- Lokal: Vorschau `sportplatz-worker` (Port 8788, lokale D1 mit Testplätzen in `worker/.wrangler`, nicht im Repo). Lokale DB füllen: `npx wrangler d1 execute sportplatz --local --file worker/schema.sql --config worker/wrangler.toml`. Worker hochladen: `NODE_USE_SYSTEM_CA=1 npx wrangler deploy --config worker/wrangler.toml`.
 - Cloudflare: Wrangler ist angemeldet (Konto der Film-/Kochabend-App), Befehle mit `NODE_USE_SYSTEM_CA=1 npx wrangler …`.
 
 ## Abschnitte
-- [x] **1 – Grundgerüst** (16.11.2026, Version 0.1.0, lokal geprüft bei 375 px): Kopfzeile mit Zahnrad → „Mehr“ (Home-Bildschirm-Hinweis, Rundgang, Datenhinweis, Version), Leiste Liste · Karte · Bewerten (Platzhalter), Rundgang 5 Karten, „Was ist neu?“-Gerüst, Auto-Update über `version.json`, Symbol (weißer Stern im Mittelkreis auf Rasengrün). Kein Querscrollen, keine Fehler. Online seit 16.11.2026, im Browser geprüft (Rundgang startet, Offline-Speicher mit allen 19 Dateien, keine Fehler). **Wartet auf iPhone-Test und Okay der Nutzerin.** Hinweis: Alle Apps auf bauer-reisen.github.io teilen sich Browser-Speicher und Offline-Speicher – darum Präfix halbzeit. / halbzeit-.
-- [ ] 2 – Plätze (Worker `sportplatz` + D1, Liste, Suche, „Wo bin ich?“, „Platz fehlt – hier anlegen“)
+- [x] **1 – Grundgerüst** (16.11.2026, Version 0.1.0, lokal geprüft bei 375 px): Kopfzeile mit Zahnrad → „Mehr“ (Home-Bildschirm-Hinweis, Rundgang, Datenhinweis, Version), Leiste Liste · Karte · Bewerten (Platzhalter), Rundgang 5 Karten, „Was ist neu?“-Gerüst, Auto-Update über `version.json`, Symbol (weißer Stern im Mittelkreis auf Rasengrün). Kein Querscrollen, keine Fehler. Online seit 16.11.2026, im Browser geprüft (Rundgang startet, Offline-Speicher mit allen 19 Dateien, keine Fehler). Vom Nutzer am iPhone abgenommen (16.11.2026). Hinweis: Alle Apps auf bauer-reisen.github.io teilen sich Browser-Speicher und Offline-Speicher – darum Präfix halbzeit. / halbzeit-.
+- [x] **2 – Plätze** (16.11.2026, Version 0.2.0): Liste (alphabetisch nach Ort, nach Entfernung sobald Standort da), Suche, „📍 Wo bin ich?“ (Standort nur auf Knopfdruck, nur im Arbeitsspeicher, „Du bist wohl hier“ bis 400 m), „➕ Platz fehlt – hier anlegen“ (Verein, Ort, Lage vom Handy auf 4 Stellen gerundet; Doppelt-Prüfung 150 m mit „Nein, neu anlegen“), Platz-Seite mit „In Karten-App öffnen“ (iPhone Apple Karten, sonst Google Maps). Platzliste im Handy zwischengespeichert (ohne Netz zuletzt geladene Liste). Worker: ändern/löschen nicht möglich, fremde Herkunft 403, Eingaben geprüft. Lokal bei 375 px geprüft, online geprüft (Auto-Update auf 0.2.0, Datenbank erreichbar). **Online-Datenbank ist leer – wartet auf iPhone-Test.** Testplätze der Nutzerin später über Verwaltung (Abschnitt 4) ausblenden.
 - [ ] 3 – Bewerten
 - [ ] 4 – Alltagstauglich (Warteschlange, Melden, Verwaltung mit `ADMIN_CODE`, Notbremse, Sicherung)
 - [ ] 5 – Karte
 
 ## Als Nächstes
-- Okay der Nutzerin zu Abschnitt 1 abwarten, dann Abschnitt 2 (Plätze).
+- Okay der Nutzerin zu Abschnitt 2 abwarten, dann Abschnitt 3 (Bewerten).
