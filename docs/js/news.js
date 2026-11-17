@@ -2,9 +2,17 @@
 // Wer die App neu hat, bekommt stattdessen den Rundgang.
 // Neueste zuerst; nur Änderungen, die man sieht und kennen sollte (keine Reparaturen).
 // Jeder Eintrag nennt in `karte` die Rundgang-Karte, die ihn erklärt, oder 'klein' (prüft scripts/check-help.js).
-import { dialog } from './ui.js?v=0.4.0';
+import { dialog } from './ui.js?v=0.4.1';
 
 export const NEWS = [
+  {
+    v: '0.4.1', karte: 'bewerten', title: 'Sterne zum Ziehen',
+    items: [
+      'Die Sterne sind jetzt ein <strong>Schieberegler</strong>: mit dem Finger ziehen, auch Teil-Sterne wie 3,7.',
+      '<strong>Wann warst du da?</strong> In den letzten 3 Monaten oder länger her – so kannst du auch Plätze von früher bewerten.',
+      'Neu bei „Was gibt es hier?“: <strong>🍽️ Warme Küche</strong> und <strong>📺 Fußball im TV</strong>.',
+    ],
+  },
   {
     v: '0.4.0', karte: 'wo', title: 'Fast alle Plätze schon drin',
     items: [

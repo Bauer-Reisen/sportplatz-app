@@ -3,18 +3,18 @@
 //   #/bewerten/<id>          → Sterne (+ freiwillig: Einzelnoten, Angebot, Bierpreis)
 //   #/bewerten/<id>/angebot  → nur Angebot eintragen, ohne Sterne (z. B. als Betreiber)
 // Gesendet wird über die Warteschlange (senden.js): klappt auch ohne Netz, 10 Sekunden „Rückgängig“.
-import { HIER_METER } from './config.js?v=0.4.0';
-import { getPlaetze, findPlatz, getPlatz } from './api.js?v=0.4.0';
-import { locate, pos, posFrisch, meters, fmtDist } from './geo.js?v=0.4.0';
-import { ANGEBOT } from './angebot.js?v=0.4.0';
-import { einreihen, zuruecknehmen, heuteBewertet, neueId, WARTEN_MS, heute } from './senden.js?v=0.4.0';
-import { esc, toast, undoBar } from './ui.js?v=0.4.0';
-import { merken, vergessen, warDa } from './besuche.js?v=0.4.0';
-import { platzSuche } from './suche.js?v=0.4.0';
-import { vorschlaege, offen } from './vorschlaege.js?v=0.4.0';
-import { vorschlagHtml, naechster, hierBekannt } from './liste.js?v=0.4.0';
+import { HIER_METER } from './config.js?v=0.4.1';
+import { getPlaetze, findPlatz, getPlatz } from './api.js?v=0.4.1';
+import { locate, pos, posFrisch, meters, fmtDist } from './geo.js?v=0.4.1';
+import { ANGEBOT } from './angebot.js?v=0.4.1';
+import { einreihen, zuruecknehmen, heuteBewertet, neueId, WARTEN_MS, heute } from './senden.js?v=0.4.1';
+import { esc, toast, undoBar, zahl } from './ui.js?v=0.4.1';
+import { merken, vergessen, warDa } from './besuche.js?v=0.4.1';
+import { platzSuche } from './suche.js?v=0.4.1';
+import { vorschlaege, offen } from './vorschlaege.js?v=0.4.1';
+import { vorschlagHtml, naechster, hierBekannt } from './liste.js?v=0.4.1';
 
-const WORTE = ['', 'Lieber nicht', 'Geht so', 'Ordentlich', 'Gut', 'Top!'];
+const wort = (v) => (v < 1.5 ? 'Lieber nicht' : v < 2.5 ? 'Geht so' : v < 3.5 ? 'Ordentlich' : v < 4.5 ? 'Gut' : 'Top!');
 const EINZELN = [
   { k: 'bier', t: '🍺 Bier' },
   { k: 'essen', t: '🌭 Essen' },
@@ -110,7 +110,7 @@ async function formular(view, id, nurAngebot) {
     if (s === 'ja') bekannt[a.k] = 1;
     else if (s === 'nein') bekannt[a.k] = 0;
   }
-  const weit = posFrisch() && meters(pos.lat, pos.lon, p.lat, p.lon) > 2000;
+  const vorOrt = posFrisch() && meters(pos.lat, pos.lon, p.lat, p.lon) < 1000;
 
   const angebotTeil = `
     <p class="label">Was gibt es hier?</p>
@@ -134,12 +134,12 @@ async function formular(view, id, nurAngebot) {
         ${nurAngebot ? `<div class="card">${angebotTeil}</div>` : `
         <p class="label">Wann warst du da?</p>
         <div class="seg" role="group" aria-label="Wann warst du da?">
-          <button type="button" class="btn${weit ? '' : ' on'}" data-b="heute">Heute</button>
-          <button type="button" class="btn${weit ? ' on' : ''}" data-b="kuerzlich">Vor ein paar Tagen</button>
+          <button type="button" class="btn on" data-b="kuerzlich">In den letzten 3 Monaten</button>
+          <button type="button" class="btn" data-b="laenger">Länger her</button>
         </div>
         <p class="label">Wie war's insgesamt?</p>
         ${sterne('gesamt', 'Gesamt', true)}
-        <p class="sternwort" id="wort" aria-live="polite">Tippe auf die Sterne</p>
+        <p class="sternwort" id="wort" aria-live="polite">Tippen oder mit dem Finger ziehen</p>
         <details class="card mehr" id="mehr">
           <summary>Mehr angeben <span class="muted">(freiwillig)</span></summary>
           ${EINZELN.map((e) => `<div class="einzel"><span>${e.t}</span>${sterne(e.k, e.t.replace(/^\S+ /, ''), false)}</div>`).join('')}
@@ -158,22 +158,52 @@ async function formular(view, id, nurAngebot) {
   const $ = (s) => view.querySelector(s);
   const werte = {};
   const angebot = { ...bekannt };
-  let besuch = weit ? 'kuerzlich' : 'heute';
+  let besuch = 'kuerzlich';
   let groesse = '0,5';
 
-  // Sterne
-  view.querySelectorAll('.stars').forEach((g) => {
-    g.querySelectorAll('button').forEach((b) => b.addEventListener('click', () => {
-      const k = g.dataset.k;
-      const v = Number(b.dataset.v);
-      werte[k] = werte[k] === v && k !== 'gesamt' ? null : v; // Einzelnoten durch nochmal Tippen wieder leeren
-      g.querySelectorAll('button').forEach((x) => {
-        x.classList.toggle('on', werte[k] != null && Number(x.dataset.v) <= werte[k]);
-        x.setAttribute('aria-checked', String(Number(x.dataset.v) === werte[k]));
-      });
-      if (k === 'gesamt') { $('#wort').textContent = WORTE[v]; $('.error').textContent = ''; }
-      if (navigator.vibrate) navigator.vibrate(10);
-    }));
+  // Sterne als Schieberegler: tippen oder ziehen, auch Teil-Sterne (z. B. 3,7)
+  view.querySelectorAll('.regler').forEach((r) => {
+    const k = r.dataset.k;
+    const flaeche = r.querySelector('.regler-sterne');
+    const setzen = (v) => {
+      werte[k] = v;
+      r.querySelector('.voll').style.width = `${v == null ? 0 : (v / 5) * 100}%`;
+      r.querySelector('.regler-zahl').textContent = v == null ? '' : zahl(v);
+      r.setAttribute('aria-valuenow', String(v ?? 0));
+      r.setAttribute('aria-valuetext', v == null ? 'keine Angabe' : `${zahl(v)} von 5 Sternen`);
+      const weg = r.querySelector('.regler-weg');
+      if (weg) weg.hidden = v == null;
+      if (k === 'gesamt' && v != null) { $('#wort').textContent = wort(v); $('.error').textContent = ''; }
+    };
+    const ausPunkt = (x) => {
+      const box = flaeche.getBoundingClientRect();
+      const v = Math.round(((x - box.left) / box.width) * 50) / 10;
+      return Math.min(5, Math.max(0.5, v));
+    };
+    let zieht = false;
+    let letzte = null;
+    flaeche.addEventListener('pointerdown', (e) => {
+      zieht = true;
+      try { flaeche.setPointerCapture(e.pointerId); } catch { /* egal */ }
+      setzen(ausPunkt(e.clientX));
+      letzte = Math.round(werte[k]);
+    });
+    flaeche.addEventListener('pointermove', (e) => {
+      if (!zieht) return;
+      setzen(ausPunkt(e.clientX));
+      // kurzes Ruckeln bei jedem vollen Stern
+      if (Math.round(werte[k]) !== letzte) { letzte = Math.round(werte[k]); if (navigator.vibrate) navigator.vibrate(8); }
+    });
+    const ende = () => { zieht = false; };
+    flaeche.addEventListener('pointerup', ende);
+    flaeche.addEventListener('pointercancel', ende);
+    r.addEventListener('keydown', (e) => {
+      const schritt = e.shiftKey ? 0.5 : 0.1;
+      const alt = werte[k] ?? 0;
+      if (e.key === 'ArrowRight' || e.key === 'ArrowUp') { e.preventDefault(); setzen(Math.min(5, Math.round((alt + schritt) * 10) / 10 || 0.5)); }
+      if (e.key === 'ArrowLeft' || e.key === 'ArrowDown') { e.preventDefault(); setzen(Math.max(0.5, Math.round((alt - schritt) * 10) / 10)); }
+    });
+    r.querySelector('.regler-weg')?.addEventListener('click', () => setzen(null));
   });
   // Wann
   view.querySelectorAll('[data-b]').forEach((b) => b.addEventListener('click', () => {
@@ -215,20 +245,20 @@ async function formular(view, id, nurAngebot) {
       bierpreis = Number(roh);
       if (!Number.isFinite(bierpreis) || bierpreis < 0.5 || bierpreis > 15) { err.textContent = 'Der Bierpreis sieht nicht richtig aus – z. B. 3,50.'; return; }
     }
-    if (!nurAngebot && !werte.gesamt) { err.textContent = 'Bitte zuerst die Gesamt-Sterne antippen.'; return; }
+    if (!nurAngebot && !werte.gesamt) { err.textContent = 'Bitte zuerst die Gesamt-Sterne setzen.'; return; }
     if (nurAngebot && !Object.keys(angebot).length && bierpreis == null) { err.textContent = 'Bitte mindestens eine Kachel antippen oder den Bierpreis eintragen.'; return; }
 
     const body = {
       id: neueId(), platz: p.id,
       art: nurAngebot ? 'angebot' : 'bewertung',
-      besuch: nurAngebot ? 'heute' : besuch,
+      besuch: nurAngebot ? 'kuerzlich' : besuch,
       ...(nurAngebot ? {} : { gesamt: werte.gesamt, bier: werte.bier ?? null, essen: werte.essen ?? null, preise: werte.preise ?? null, stimmung: werte.stimmung ?? null }),
       angebot: mitAngebot ? angebot : {},
       bierpreis, groesse: bierpreis == null ? null : groesse,
     };
     einreihen(body);
-    // Besuch ins Stempelheft – „Vor ein paar Tagen“ zählt als Besuch ohne genauen Tag
-    const tag = body.besuch === 'heute' ? heute() : '';
+    // Besuch ins Stempelheft – mit Datum nur, wenn du gerade dort bist
+    const tag = vorOrt ? heute() : '';
     const vorher = warDa(p.id);
     const ziel = body.art === 'bewertung' ? merken(p, tag) : 0;
     if (navigator.vibrate) navigator.vibrate(30);
@@ -242,7 +272,9 @@ async function formular(view, id, nurAngebot) {
 }
 
 function sterne(k, name, gross) {
-  return `<div class="stars${gross ? ' big' : ''}" data-k="${k}" role="radiogroup" aria-label="${esc(name)}">
-    ${[1, 2, 3, 4, 5].map((v) => `<button type="button" data-v="${v}" role="radio" aria-checked="false" aria-label="${v} ${v === 1 ? 'Stern' : 'Sterne'}">★</button>`).join('')}
+  return `<div class="regler${gross ? ' big' : ''}" data-k="${k}" role="slider" tabindex="0" aria-label="${esc(name)}" aria-valuemin="0.5" aria-valuemax="5" aria-valuenow="0" aria-valuetext="keine Angabe">
+    <span class="regler-sterne"><span class="leer" aria-hidden="true">★★★★★</span><span class="voll" aria-hidden="true">★★★★★</span></span>
+    <span class="regler-zahl"></span>
+    ${gross ? '' : '<button type="button" class="regler-weg" hidden aria-label="Wieder leeren">✕</button>'}
   </div>`;
 }

@@ -5,9 +5,11 @@ export const ANGEBOT = [
   { k: 'softdrinks', e: '🥤', t: 'Limo & Cola' },
   { k: 'kaffee', e: '☕', t: 'Kaffee' },
   { k: 'schnaps', e: '🥃', t: 'Schnaps' },
+  { k: 'kueche', e: '🍽️', t: 'Warme Küche' },
   { k: 'bratwurst', e: '🌭', t: 'Bratwurst' },
   { k: 'currywurst', e: '🍛', t: 'Currywurst' },
   { k: 'broetchen', e: '🥨', t: 'Brötchen & Brezen' },
   { k: 'kuchen', e: '🍰', t: 'Kuchen' },
+  { k: 'tv', e: '📺', t: 'Fußball im TV' },
   { k: 'karte', e: '💳', t: 'Kartenzahlung' },
 ];

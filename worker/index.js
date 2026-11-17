@@ -18,7 +18,7 @@ const LAT = [47.0, 55.2];
 const LON = [5.5, 15.5];
 
 // Muss zu docs/js/angebot.js passen (prüft scripts/check-help.js)
-const ANGEBOT = ['fassbier', 'alkoholfrei', 'softdrinks', 'kaffee', 'schnaps', 'bratwurst', 'currywurst', 'broetchen', 'kuchen', 'karte'];
+const ANGEBOT = ['fassbier', 'alkoholfrei', 'softdrinks', 'kaffee', 'schnaps', 'kueche', 'bratwurst', 'currywurst', 'broetchen', 'kuchen', 'tv', 'karte'];
 const KRITERIEN = ['gesamt', 'bier', 'essen', 'preise', 'stimmung'];
 const GROESSEN = ['0,5', '0,33'];
 const GRUENDE = ['stimmt nicht', 'beleidigend', 'werbung'];
@@ -141,13 +141,15 @@ export default {
         if (await one('SELECT id FROM bewertungen WHERE id = ?', id)) return reply(200, { ok: true, schon: true });
 
         const art = b.art === 'angebot' ? 'angebot' : 'bewertung';
-        const besuch = b.besuch === 'kuerzlich' ? 'kuerzlich' : 'heute';
+        // 'kuerzlich' = in den letzten 3 Monaten, 'laenger' = länger her ('heute' gibt es aus alten Versionen)
+        const besuch = ['heute', 'kuerzlich', 'laenger'].includes(b.besuch) ? b.besuch : 'kuerzlich';
         const sterne = {};
         for (const k of KRITERIEN) {
           const v = b[k];
           if (v === null || v === undefined || v === '' || art === 'angebot') { sterne[k] = null; continue; }
-          if (!Number.isInteger(v) || v < 1 || v > 5) return reply(400, { error: 'Sterne bitte von 1 bis 5.' });
-          sterne[k] = v;
+          // Schieberegler: auch Teil-Sterne, z. B. 3,7 (auf Zehntel gerundet)
+          if (typeof v !== 'number' || !Number.isFinite(v) || v < 0.5 || v > 5) return reply(400, { error: 'Sterne bitte zwischen 0,5 und 5.' });
+          sterne[k] = Math.round(v * 10) / 10;
         }
         if (art === 'bewertung' && sterne.gesamt == null) return reply(400, { error: 'Bitte mindestens die Gesamt-Sterne vergeben.' });
 

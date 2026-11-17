@@ -1,8 +1,8 @@
 // Verwaltung – nur mit dem Verwaltungs-Code (steht als Secret ADMIN_CODE bei Cloudflare, nie im Code).
 // Der Code wird nur auf diesem Handy gemerkt. Normale Nutzer brauchen ihn nie.
-import { call } from './api.js?v=0.4.0';
-import { store } from './store.js?v=0.4.0';
-import { esc, dialog, toast, datum } from './ui.js?v=0.4.0';
+import { call } from './api.js?v=0.4.1';
+import { store } from './store.js?v=0.4.1';
+import { esc, dialog, toast, datum } from './ui.js?v=0.4.1';
 
 const admin = (path, opt = {}) => call(`/api/admin${path}`, { ...opt, headers: { 'X-Admin': store.get('adminCode') || '' } });
 

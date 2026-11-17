@@ -1,11 +1,11 @@
 // Seite eines Platzes: Noten, was es gibt (✓ / ✗ / ?), Bierpreis, letzte Einträge mit „Melden“.
-import { getPlatz, findPlatz, melden } from './api.js?v=0.4.0';
-import { mapsLink, posFrisch, pos, meters, fmtDist } from './geo.js?v=0.4.0';
-import { ANGEBOT } from './angebot.js?v=0.4.0';
-import { heuteBewertet, wartend, geraet } from './senden.js?v=0.4.0';
-import { store } from './store.js?v=0.4.0';
-import { esc, dialog, toast, zahl, datum } from './ui.js?v=0.4.0';
-import { warDa, manuell } from './besuche.js?v=0.4.0';
+import { getPlatz, findPlatz, melden } from './api.js?v=0.4.1';
+import { mapsLink, posFrisch, pos, meters, fmtDist } from './geo.js?v=0.4.1';
+import { ANGEBOT } from './angebot.js?v=0.4.1';
+import { heuteBewertet, wartend, geraet } from './senden.js?v=0.4.1';
+import { store } from './store.js?v=0.4.1';
+import { esc, dialog, toast, zahl, datum } from './ui.js?v=0.4.1';
+import { warDa, manuell } from './besuche.js?v=0.4.1';
 
 const NAMEN = { gesamt: 'Gesamt', bier: '🍺 Bier', essen: '🌭 Essen', preise: '💶 Preise', stimmung: '🎉 Stimmung' };
 const GRUENDE = [
@@ -14,10 +14,8 @@ const GRUENDE = [
   { v: 'werbung', t: 'Werbung oder Fake' },
 ];
 
-export const sterneText = (x) => {
-  const voll = Math.round(x);
-  return `<span class="gold" aria-hidden="true">${'★'.repeat(voll)}</span><span class="grau" aria-hidden="true">${'★'.repeat(5 - voll)}</span>`;
-};
+// Sterne mit Teil-Füllung (3,7 → drei volle und ein fast voller Stern)
+export const sterneText = (x) => `<span class="teilsterne" aria-hidden="true"><span class="leer">★★★★★</span><span class="voll" style="width:${Math.max(0, Math.min(5, x)) * 20}%">★★★★★</span></span>`;
 
 export async function render(view, id) {
   const schnell = findPlatz(id);
@@ -81,8 +79,8 @@ export async function render(view, id) {
   const eintragHtml = eintraege.length
     ? `<ul class="eintraege">${eintraege.map((e) => `
         <li>
-          <span>${e.art === 'angebot' ? '📝 Angebot eingetragen' : `<span class="sterne klein">${sterneText(e.gesamt)}</span>`}</span>
-          <span class="muted small">${datum(e.tag)}${e.besuch === 'kuerzlich' ? ' (Besuch ein paar Tage vorher)' : ''}</span>
+          <span>${e.art === 'angebot' ? '📝 Angebot eingetragen' : `<span class="sterne klein">${sterneText(e.gesamt)}</span> ${zahl(e.gesamt)}`}</span>
+          <span class="muted small">${datum(e.tag)}${e.besuch === 'laenger' ? ' · Besuch länger her' : ''}</span>
           ${gemeldet.has(e.id) ? '<span class="muted small">gemeldet</span>' : `<button type="button" class="link small melden" data-id="${esc(e.id)}">Melden</button>`}
         </li>`).join('')}</ul>`
     : '<p class="muted">Noch nichts eingetragen.</p>';

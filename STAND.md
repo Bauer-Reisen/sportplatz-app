@@ -26,6 +26,8 @@
 - **0.4.0** (16.11.2026): **Vereinsliste** docs/data/vorschlaege.json (1859 Sportgelände Unterfranken aus OpenStreetMap, ODbL; 430 mit Verein, 82 mit Sportheim, je nächste Stadt). Erzeugen: Rohdaten von heute wiederverwendet.
 ✓ 1859 Sportgelände (430 mit Verein, 82 mit Sportheim) → docs/data/vorschlaege.json (Overpass in 4 Teilen, Rohdaten 1 Tag im Temp-Ordner). Liste/Bewerten-Suche zeigt „Noch nicht in der App – antippen zum Anlegen“, Wo bin ich erkennt sie (400 m), Anlegen-Karte zeigt sie als graue Punkte; #/neu/osm/<nr> füllt Verein/Ort/Lage. **Meine Plätze** (#/meine, besuche.js, nur im Handy; automatisch beim Bewerten, sonst „Hier war ich schon“; Ziele 1/5/10/25/50/100/200). **Wann ist hier Spiel?** = Link fussball.de-Suche nach Vereinsname. Rundgang 8 Karten.
 
+- **0.4.1** (17.11.2026): Vereinsliste ohne Doppelte (1560 Gelände: namenlose Nebenplätze im selben Ort bis 3 km fallen weg, wenn es dort einen Verein/Sportheim gibt; gleicher Verein bis 3 km nur einmal). Angebot + 🍽️ Warme Küche (kueche) und 📺 Fußball im TV (tv). „Wann warst du da?“ = In den letzten 3 Monaten (kuerzlich) / Länger her (laenger); Server nimmt heute|kuerzlich|laenger. Sterne = Schieberegler 0,5–5 in Zehnteln (Server rundet auf 0,1), Anzeige mit Teil-Sternen. Meine Plätze: Datum nur, wenn man gerade dort ist (<1 km). Liste: Suche wird beim Antippen eines Treffers geleert.
+
 ## Als Nächstes
 - Nutzerin testet alles nach der Testliste (inkl. iPhone-Test Abschnitt 2). Secret ADMIN_CODE ist gesetzt (16.11.2026, geprüft: health verwaltung:true, falscher Code → 401).
 - Danach: Rückmeldungen einarbeiten, Testplätze über Verwaltung ausblenden.

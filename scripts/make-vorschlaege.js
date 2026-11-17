@@ -151,6 +151,19 @@ for (const g of gelaende) {
   }
   out.push([verein, ort, Math.round(lat * 1e4) / 1e4, Math.round(lon * 1e4) / 1e4, heim, stadt]);
 }
+// Pro Ort nur das Wichtige: gibt es einen Platz mit Verein oder Sportheim, fallen namenlose
+// Nebenplätze im selben Ort (bis 3 km) weg – sonst steht z. B. Arnshausen doppelt da.
+const wichtig = out.filter((x) => x[0] || x[4]);
+const ergebnis = out.filter((x) => x[0] || x[4] || !wichtig.some((w) => w[1] === x[1] && meters(w[2], w[3], x[2], x[3]) < 3000));
+// Und mehrere namenlose Plätze im selben Ort (bis 1,5 km) → einer
+const fertig = [];
+for (const x of ergebnis.sort((a, b2) => b2[4] - a[4])) { // mit Sportheim zuerst
+  if (x[0] && fertig.some((f) => f[0] === x[0] && meters(f[2], f[3], x[2], x[3]) < 3000)) continue; // gleicher Verein (z. B. alter Platz)
+  if (!x[0] && !x[4] && fertig.some((f) => !f[0] && f[1] === x[1] && meters(f[2], f[3], x[2], x[3]) < 1500)) continue;
+  fertig.push(x);
+}
+out.length = 0;
+out.push(...fertig);
 out.sort((a, b2) => (a[1] + a[0]).localeCompare(b2[1] + b2[0], 'de'));
 
 mkdirSync('docs/data', { recursive: true });

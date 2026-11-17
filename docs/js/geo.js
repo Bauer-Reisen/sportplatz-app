@@ -1,6 +1,6 @@
 // Standort – nur auf Knopfdruck, nur im Handy. Wird nicht gespeichert und nicht verschickt
 // (außer als Lage eines neu angelegten Platzes).
-import { isIos } from './install.js?v=0.4.0';
+import { isIos } from './install.js?v=0.4.1';
 
 // Letzte Position nur im Arbeitsspeicher (weg, sobald die App geschlossen wird)
 export const pos = { lat: null, lon: null, acc: null, zeit: 0 };

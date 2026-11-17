@@ -1,12 +1,12 @@
 // Seite „Liste“: alle Plätze, Suche und „Wo bin ich?“.
-import { HIER_METER } from './config.js?v=0.4.0';
-import { getPlaetze, cache } from './api.js?v=0.4.0';
-import { locate, pos, posFrisch, meters, fmtDist } from './geo.js?v=0.4.0';
-import { esc, zahl } from './ui.js?v=0.4.0';
-import { platzSuche } from './suche.js?v=0.4.0';
-import { vorschlaege, offen, vorschlagLink } from './vorschlaege.js?v=0.4.0';
-import { anzahl } from './besuche.js?v=0.4.0';
-import { installBanner, wireInstall } from './install.js?v=0.4.0';
+import { HIER_METER } from './config.js?v=0.4.1';
+import { getPlaetze, cache } from './api.js?v=0.4.1';
+import { locate, pos, posFrisch, meters, fmtDist } from './geo.js?v=0.4.1';
+import { esc, zahl } from './ui.js?v=0.4.1';
+import { platzSuche } from './suche.js?v=0.4.1';
+import { vorschlaege, offen, vorschlagLink } from './vorschlaege.js?v=0.4.1';
+import { anzahl } from './besuche.js?v=0.4.1';
+import { installBanner, wireInstall } from './install.js?v=0.4.1';
 
 let suche = ''; // bleibt beim Seitenwechsel erhalten
 
@@ -65,6 +65,8 @@ export async function render(view) {
   };
 
   $('#suche').addEventListener('input', (e) => { suche = e.target.value; zeichnen(); });
+  // Platz gewählt → Suche leeren, damit beim Zurückkommen wieder alle Plätze da sind
+  $('#liste').addEventListener('click', (e) => { if (e.target.closest('a')) suche = ''; });
   $('#wo').addEventListener('click', async () => {
     const btn = $('#wo');
     btn.disabled = true; btn.textContent = '📍 Suche deinen Standort …';

@@ -292,3 +292,19 @@ input:focus { outline: 3px solid var(--accent); outline-offset: 1px; border-colo
 .stempel-zahl { font-size: 3.2rem; font-weight: 800; line-height: 1; color: var(--accent); }
 .balken { width: 100%; max-width: 280px; height: 10px; border-radius: 999px; background: #fff; overflow: hidden; margin: 8px 0 2px; }
 .balken span { display: block; height: 100%; background: var(--accent); }
+
+/* ---------- Sterne-Schieberegler und Teil-Sterne ---------- */
+.regler { display: flex; align-items: center; gap: 10px; border-radius: 10px; }
+.regler:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+.regler-sterne { position: relative; display: inline-block; line-height: 1; font-size: 1.9rem; letter-spacing: 0; white-space: nowrap; cursor: pointer; touch-action: none; user-select: none; -webkit-user-select: none; padding: 8px 0; }
+.regler.big .regler-sterne { font-size: 3.1rem; }
+.regler-sterne .leer { color: #c9d1cc; }
+.regler-sterne .voll { position: absolute; left: 0; top: 8px; width: 0; overflow: hidden; color: var(--gold); pointer-events: none; }
+.regler-zahl { font-weight: 800; min-width: 2.2em; font-size: 1.05rem; }
+.regler.big .regler-zahl { font-size: 1.5rem; }
+.regler-weg { font: inherit; border: 0; background: none; color: var(--muted); padding: 6px; min-width: 40px; min-height: 40px; cursor: pointer; }
+.einzel .regler-sterne { font-size: 1.6rem; }
+.einzel .regler { gap: 4px; }
+.teilsterne { position: relative; display: inline-block; white-space: nowrap; line-height: 1; letter-spacing: 0; vertical-align: -1px; }
+.teilsterne .leer { color: #c9d1cc; }
+.teilsterne .voll { position: absolute; left: 0; top: 0; overflow: hidden; color: var(--gold); }

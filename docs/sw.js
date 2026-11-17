@@ -3,7 +3,7 @@
 // Ohne Netz oder bei schwachem Netz am Platz: die gespeicherte Kopie.
 // Daten aus der Datenbank (anderer Server) werden hier NICHT gespeichert.
 
-const VERSION = '0.4.0';
+const VERSION = '0.4.1';
 const CACHE = 'halbzeit-' + VERSION;
 const DATEIEN = [
   './', 'index.html', 'manifest.webmanifest', 'style.css', 'version.json',

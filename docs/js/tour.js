@@ -1,7 +1,7 @@
 // Rundgang beim allerersten Öffnen: ein paar Karten, jederzeit überspringbar.
 // Unter dem Zahnrad („Rundgang ansehen“) wieder aufrufbar.
 // `stand` = Version, in der die Karte zuletzt inhaltlich angepasst wurde (prüft scripts/check-help.js).
-import { dialog } from './ui.js?v=0.4.0';
+import { dialog } from './ui.js?v=0.4.1';
 
 export const STEPS = [
   {
@@ -13,8 +13,8 @@ export const STEPS = [
     text: 'Am Platz ein Tipp auf <strong>Wo bin ich?</strong>, und der nächste Platz steht ganz oben. Die App kennt fast alle Fußballplätze in Unterfranken – fehlt einer noch, legst du ihn <strong>mit einem Tipp</strong> an.',
   },
   {
-    id: 'bewerten', stand: '0.3.0', icon: '⭐', title: 'In 30 Sekunden bewertet',
-    text: 'Unten auf <strong>Bewerten</strong>, Platz wählen, <strong>Gesamt-Sterne</strong> antippen, Senden – fertig. Bier, Essen, Preise und Stimmung sind freiwillig. Warst du letzte Woche dort? Dann „Vor ein paar Tagen“ wählen.',
+    id: 'bewerten', stand: '0.4.1', icon: '⭐', title: 'In 30 Sekunden bewertet',
+    text: 'Unten auf <strong>Bewerten</strong>, Platz wählen, die <strong>Sterne</strong> mit dem Finger ziehen – auch halbe oder dreiviertel Sterne –, Senden, fertig. Bier, Essen, Preise und Stimmung sind freiwillig. Kennst du den Platz von früher? Dann „Länger her“ wählen.',
   },
   {
     id: 'angebot', stand: '0.3.0', icon: '🌭', title: 'Was gibt es hier?',
