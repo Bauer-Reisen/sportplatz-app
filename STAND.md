@@ -28,6 +28,8 @@
 
 - **0.4.1** (17.11.2026): Vereinsliste ohne Doppelte (1560 Gelände: namenlose Nebenplätze im selben Ort bis 3 km fallen weg, wenn es dort einen Verein/Sportheim gibt; gleicher Verein bis 3 km nur einmal). Angebot + 🍽️ Warme Küche (kueche) und 📺 Fußball im TV (tv). „Wann warst du da?“ = In den letzten 3 Monaten (kuerzlich) / Länger her (laenger); Server nimmt heute|kuerzlich|laenger. Sterne = Schieberegler 0,5–5 in Zehnteln (Server rundet auf 0,1), Anzeige mit Teil-Sternen. Meine Plätze: Datum nur, wenn man gerade dort ist (<1 km). Liste: Suche wird beim Antippen eines Treffers geleert.
 
+- **0.4.2** (17.11.2026): Angebot + 🍟 Pommes (pommes). Kacheln passen ab 320 px (feste Trennstellen per ­ in angebot.js, kompakter unter 360 px).
+
 ## Als Nächstes
 - Nutzerin testet alles nach der Testliste (inkl. iPhone-Test Abschnitt 2). Secret ADMIN_CODE ist gesetzt (16.11.2026, geprüft: health verwaltung:true, falscher Code → 401).
 - Danach: Rückmeldungen einarbeiten, Testplätze über Verwaltung ausblenden.

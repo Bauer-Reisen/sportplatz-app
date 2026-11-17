@@ -1,8 +1,8 @@
 // Vereinsliste: alle Fußballplätze der Region aus OpenStreetMap (docs/data/vorschlaege.json,
 // erzeugt mit scripts/make-vorschlaege.js). Liegt in der App selbst – beim Suchen geht nichts ins Netz.
 // Plätze, die schon in der App angelegt sind, werden nicht nochmal vorgeschlagen.
-import { VERSION } from './config.js?v=0.4.1';
-import { meters } from './geo.js?v=0.4.1';
+import { VERSION } from './config.js?v=0.4.2';
+import { meters } from './geo.js?v=0.4.2';
 
 let laden = null;
 export function vorschlaege() {

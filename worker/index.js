@@ -18,7 +18,7 @@ const LAT = [47.0, 55.2];
 const LON = [5.5, 15.5];
 
 // Muss zu docs/js/angebot.js passen (prüft scripts/check-help.js)
-const ANGEBOT = ['fassbier', 'alkoholfrei', 'softdrinks', 'kaffee', 'schnaps', 'kueche', 'bratwurst', 'currywurst', 'broetchen', 'kuchen', 'tv', 'karte'];
+const ANGEBOT = ['fassbier', 'alkoholfrei', 'softdrinks', 'kaffee', 'schnaps', 'kueche', 'bratwurst', 'currywurst', 'pommes', 'broetchen', 'kuchen', 'tv', 'karte'];
 const KRITERIEN = ['gesamt', 'bier', 'essen', 'preise', 'stimmung'];
 const GROESSEN = ['0,5', '0,33'];
 const GRUENDE = ['stimmt nicht', 'beleidigend', 'werbung'];

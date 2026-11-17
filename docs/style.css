@@ -308,3 +308,23 @@ input:focus { outline: 3px solid var(--accent); outline-offset: 1px; border-colo
 .teilsterne { position: relative; display: inline-block; white-space: nowrap; line-height: 1; letter-spacing: 0; vertical-align: -1px; }
 .teilsterne .leer { color: #c9d1cc; }
 .teilsterne .voll { position: absolute; left: 0; top: 0; overflow: hidden; color: var(--gold); }
+
+/* Schmale Handys: Kacheln und Aufklapp-Karte enger */
+.kacheln { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.kachel { min-width: 0; gap: 6px; padding: 8px 24px 8px 8px; font-size: .95rem; line-height: 1.2; }
+.kachel .ke { font-size: 1.3rem; flex: none; }
+.kachel .kt { min-width: 0; overflow-wrap: anywhere; hyphens: auto; }
+.kachel .kz { right: 7px; font-size: 1.1rem; }
+.mehr[open] { padding: 0 12px 14px; }
+.mehr[open] summary { margin: 0 -12px 4px; padding-left: 14px; }
+.preiszeile .seg-klein { flex: none; }
+@media (max-width: 360px) {
+  .kachel { font-size: .88rem; padding-right: 20px; }
+  .view { padding-left: 12px; padding-right: 12px; }
+}
+.kachel .kt { overflow-wrap: normal; hyphens: manual; }
+@media (max-width: 360px) {
+  .kachel { font-size: .85rem; gap: 4px; padding: 8px 18px 8px 6px; }
+  .kachel .ke { font-size: 1.1rem; }
+  .kachel .kz { right: 5px; }
+}
