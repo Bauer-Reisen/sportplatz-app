@@ -1,11 +1,11 @@
 // Seite eines Platzes: Noten, was es gibt (✓ / ✗ / ?), Bierpreis, letzte Einträge mit „Melden“.
-import { getPlatz, findPlatz, gespeicherterPlatz, melden } from './api.js?v=0.4.4';
-import { mapsLink, posFrisch, pos, meters, fmtDist } from './geo.js?v=0.4.4';
-import { ANGEBOT } from './angebot.js?v=0.4.4';
-import { heuteBewertet, wartend, geraet } from './senden.js?v=0.4.4';
-import { store } from './store.js?v=0.4.4';
-import { esc, dialog, toast, zahl, datum } from './ui.js?v=0.4.4';
-import { warDa, manuell } from './besuche.js?v=0.4.4';
+import { getPlatz, findPlatz, gespeicherterPlatz, melden } from './api.js?v=0.4.5';
+import { mapsLink, posFrisch, pos, meters, fmtDist } from './geo.js?v=0.4.5';
+import { ANGEBOT } from './angebot.js?v=0.4.5';
+import { heuteBewertet, wartend, geraet } from './senden.js?v=0.4.5';
+import { store } from './store.js?v=0.4.5';
+import { esc, dialog, toast, zahl, datum } from './ui.js?v=0.4.5';
+import { warDa, manuell } from './besuche.js?v=0.4.5';
 
 const NAMEN = { gesamt: 'Gesamt', bier: '🍺 Bier', essen: '🌭 Essen', preise: '💶 Preise', stimmung: '🎉 Stimmung' };
 const GRUENDE = [

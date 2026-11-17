@@ -1,6 +1,6 @@
 // Seite „Meine Plätze“ – dein persönliches Stempelheft. Nur in diesem Handy gespeichert.
-import { besuche, ZIELE, alleVergessen } from './besuche.js?v=0.4.4';
-import { esc, datum, dialog, toast } from './ui.js?v=0.4.4';
+import { besuche, ZIELE, alleVergessen } from './besuche.js?v=0.4.5';
+import { esc, datum, dialog, toast } from './ui.js?v=0.4.5';
 
 export function render(view) {
   const liste = besuche();

@@ -1,6 +1,6 @@
 // „Meine Plätze“: welche Plätze du schon besucht hast – wie ein Stempelheft.
 // Liegt NUR in diesem Handy (nichts davon geht an den Server).
-import { store } from './store.js?v=0.4.4';
+import { store } from './store.js?v=0.4.5';
 
 const lesen = () => { try { return JSON.parse(store.get('besuche') || '{}'); } catch { return {}; } };
 const speichern = (b) => store.set('besuche', JSON.stringify(b));

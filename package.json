@@ -1,6 +1,6 @@
 {
   "name": "sportplatz-app",
-  "version": "0.4.4",
+  "version": "0.4.5",
   "private": true,
   "description": "Halbzeit-Check: Sportheime und Verkaufsstände an Amateur-Fußballplätzen bewerten",
   "type": "module",
