@@ -1,8 +1,11 @@
 // Seite „Mehr“ (Zahnrad oben): Rundgang, Neuigkeiten, Home-Bildschirm, Version.
-import { VERSION, APP_NAME } from './config.js?v=0.4.5';
-import { installCard } from './install.js?v=0.4.5';
-import { runTour } from './tour.js?v=0.4.5';
-import { NEWS, showNews } from './news.js?v=0.4.5';
+import { VERSION, APP_NAME } from './config.js?v=0.4.6';
+import { toast } from './ui.js?v=0.4.6';
+import { installCard } from './install.js?v=0.4.6';
+import { runTour } from './tour.js?v=0.4.6';
+import { NEWS, showNews } from './news.js?v=0.4.6';
+
+const APP_URL = 'https://bauer-reisen.github.io/sportplatz-app/';
 
 export function render(view) {
   view.innerHTML = `
@@ -13,6 +16,13 @@ export function render(view) {
         <h3>Hilfe</h3>
         <button type="button" class="btn btn-wide" data-act="tour">Rundgang ansehen</button>
         ${NEWS.length ? '<button type="button" class="btn btn-wide" style="margin-top:10px" data-act="news">Was ist neu?</button>' : ''}
+      </div>
+      <div class="card weitergeben">
+        <h3>App weitergeben</h3>
+        <img class="qr" src="img/qr.svg" alt="QR-Code zur App" width="200" height="200">
+        <p class="small"><a href="${APP_URL}">${APP_URL.replace('https://', '')}</a></p>
+        <button type="button" class="btn btn-primary" data-act="teilen">Link teilen</button>
+        <p class="muted small" style="margin-top:10px">Mit der Handy-Kamera scannen – fertig.</p>
       </div>
       <div class="card card-soft">
         <h3>Deine Daten</h3>
@@ -32,5 +42,14 @@ export function render(view) {
       </footer>
     </section>`;
   view.querySelector('[data-act=tour]').addEventListener('click', () => runTour());
+  view.querySelector('[data-act=teilen]').addEventListener('click', async () => {
+    try {
+      if (navigator.share) { await navigator.share({ title: APP_NAME, text: 'Halbzeit-Check: Was gibt es am Sportplatz zu essen und zu trinken?', url: APP_URL }); return; }
+      await navigator.clipboard.writeText(APP_URL);
+      toast('Link kopiert.');
+    } catch (err) {
+      if (err?.name !== 'AbortError') toast(`Link: ${APP_URL}`, 5000);
+    }
+  });
   view.querySelector('[data-act=news]')?.addEventListener('click', () => showNews(NEWS));
 }

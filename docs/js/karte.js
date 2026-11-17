@@ -1,9 +1,9 @@
 // Seite „Karte“: alle Plätze auf einer Karte, farbig nach Gesamt-Note.
 // Grün ab 4, gelb ab 3, rot darunter, grau = noch zu wenige Bewertungen.
-import { schnellPlaetze } from './api.js?v=0.4.5';
-import { locate, pos, posFrisch } from './geo.js?v=0.4.5';
-import { neueKarte } from './kartenbaustein.js?v=0.4.5';
-import { esc, zahl } from './ui.js?v=0.4.5';
+import { schnellPlaetze } from './api.js?v=0.4.6';
+import { locate, pos, posFrisch } from './geo.js?v=0.4.6';
+import { neueKarte } from './kartenbaustein.js?v=0.4.6';
+import { esc, zahl } from './ui.js?v=0.4.6';
 
 const WENIGE = 3; // darunter blass
 export const farbe = (s) => (s == null ? '#8a948f' : s >= 4 ? '#1c8a3f' : s >= 3 ? '#e0a100' : '#c0392b');

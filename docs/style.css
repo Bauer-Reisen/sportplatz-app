@@ -331,3 +331,7 @@ input:focus { outline: 3px solid var(--accent); outline-offset: 1px; border-colo
   .kachel .ke { font-size: 1.1rem; }
   .kachel .kz { right: 5px; }
 }
+
+/* App weitergeben (QR-Code wie Film-App) */
+.weitergeben { text-align: center; }
+.weitergeben .qr { display: block; margin: 6px auto 8px; width: 200px; height: 200px; border-radius: 8px; background: #fff; padding: 6px; }

@@ -4,7 +4,7 @@
 // Updates: app.js merkt eine neue Version (version.json) und lädt mit ?v=<neu> – das geht immer übers Netz.
 // Daten aus der Datenbank (anderer Server) werden hier NICHT gespeichert.
 
-const VERSION = '0.4.5';
+const VERSION = '0.4.6';
 const CACHE = 'halbzeit-' + VERSION;
 const DATEIEN = [
   './', 'index.html', 'manifest.webmanifest', 'style.css', 'version.json',
@@ -12,7 +12,7 @@ const DATEIEN = [
   'js/liste.js', 'js/karte.js', 'js/bewerten.js', 'js/mehr.js',
   'js/api.js', 'js/geo.js', 'js/platz.js', 'js/neu.js', 'js/kartenbaustein.js',
   'js/angebot.js', 'js/senden.js', 'js/verwaltung.js', 'js/suche.js', 'js/vorschlaege.js', 'js/besuche.js', 'js/meine.js', 'data/vorschlaege.json',
-  'icons/icon-192.png', 'icons/apple-touch-icon.png',
+  'icons/icon-192.png', 'icons/apple-touch-icon.png', 'img/qr.svg',
   'vendor/leaflet/leaflet.js', 'vendor/leaflet/leaflet.css',
   'vendor/leaflet/images/marker-icon.png', 'vendor/leaflet/images/marker-icon-2x.png', 'vendor/leaflet/images/marker-shadow.png',
 ];

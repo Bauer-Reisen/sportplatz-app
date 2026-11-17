@@ -2,9 +2,13 @@
 // Wer die App neu hat, bekommt stattdessen den Rundgang.
 // Neueste zuerst; nur Änderungen, die man sieht und kennen sollte (keine Reparaturen).
 // Jeder Eintrag nennt in `karte` die Rundgang-Karte, die ihn erklärt, oder 'klein' (prüft scripts/check-help.js).
-import { dialog } from './ui.js?v=0.4.5';
+import { dialog } from './ui.js?v=0.4.6';
 
 export const NEWS = [
+  {
+    v: '0.4.6', karte: 'klein', title: 'App weitergeben',
+    items: ['Oben rechts unter ⚙️ <strong>Mehr</strong> gibt es jetzt einen <strong>QR-Code</strong>: Freunde scannen ihn mit der Kamera und haben die App.'],
+  },
   {
     v: '0.4.2', karte: 'klein', title: 'Pommes!',
     items: ['Bei „Was gibt es hier?“ gibt es jetzt auch <strong>🍟 Pommes</strong>.'],

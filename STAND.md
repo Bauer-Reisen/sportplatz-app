@@ -32,6 +32,7 @@
 - **0.4.3** (17.11.2026): Tempo. sw.js: Dateien mit ?v=VERSION und Startseite sofort aus dem Speicher (Startseite im Hintergrund aufgefrischt), ?v≠VERSION übers Netz (Update). api.js call(): Abbruch nach 8 s (GET) / 15 s (POST). Liste/Platz/Karte/Bewerten zeigen gespeicherte Daten sofort (gespeichertePlaetze, gespeicherterPlatz, schnellPlaetze), frische danach. app.js: jede Seite rendert in eigenen div.seite – eine alte, noch ladende Seite schreibt ins Leere (Ursache für leere/falsche Seiten). Online gemessen: Start < 0,1 s.
 - **0.4.4** (17.11.2026): Rückgängig-Zeit nach dem Senden 5 s statt 10 s (WARTEN_MS in senden.js), auf Wunsch der Nutzerin.
 - **0.4.5** (17.11.2026): Reiterleiste verrutschte beim Nachfedern ganz oben (iPhone). style.css: html, body overscroll-behavior: none; .tabbar transform: translateZ(0).
+- **0.4.6** (17.11.2026): App weitergeben: QR-Code (wie Film-App, erzeugt mit qrcode aus Film-App/node_modules) + „Link teilen“ (navigator.share, sonst kopieren) unter ⚙️ Mehr. Bild docs/img/qr.svg (in sw.js), News klein.
 
 ## Als Nächstes
 - Nutzerin testet alles nach der Testliste (inkl. iPhone-Test Abschnitt 2). Secret ADMIN_CODE ist gesetzt (16.11.2026, geprüft: health verwaltung:true, falscher Code → 401).
