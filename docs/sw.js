@@ -4,7 +4,7 @@
 // Updates: app.js merkt eine neue Version (version.json) und lädt mit ?v=<neu> – das geht immer übers Netz.
 // Daten aus der Datenbank (anderer Server) werden hier NICHT gespeichert.
 
-const VERSION = '0.4.6';
+const VERSION = '0.4.7';
 const CACHE = 'halbzeit-' + VERSION;
 const DATEIEN = [
   './', 'index.html', 'manifest.webmanifest', 'style.css', 'version.json',

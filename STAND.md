@@ -33,6 +33,7 @@
 - **0.4.4** (17.11.2026): Rückgängig-Zeit nach dem Senden 5 s statt 10 s (WARTEN_MS in senden.js), auf Wunsch der Nutzerin.
 - **0.4.5** (17.11.2026): Reiterleiste verrutschte beim Nachfedern ganz oben (iPhone). style.css: html, body overscroll-behavior: none; .tabbar transform: translateZ(0).
 - **0.4.6** (17.11.2026): App weitergeben: QR-Code (wie Film-App, erzeugt mit qrcode aus Film-App/node_modules) + „Link teilen“ (navigator.share, sonst kopieren) unter ⚙️ Mehr. Bild docs/img/qr.svg (in sw.js), News klein.
+- **0.4.7** (17.11.2026): Fester Rahmen gegen hüpfende Leiste (iPhone, Meldung der Nutzerin): html/body overflow hidden, body Flex-Spalte, nur #scroller (bzw. .hauptseite > .seite) scrollt, Leiste nicht mehr position:fixed, sondern im Aufbau darunter (Film: Tabs bleiben fixed, Scroller endet darüber). Alle scrollTo/scrollY auf den Scroller umgestellt. Gemessen 375×812: Fenster scrollt nicht, Leiste bleibt bei 0 px Versatz, Inhalt endet an der Leiste.
 
 ## Als Nächstes
 - Nutzerin testet alles nach der Testliste (inkl. iPhone-Test Abschnitt 2). Secret ADMIN_CODE ist gesetzt (16.11.2026, geprüft: health verwaltung:true, falscher Code → 401).
