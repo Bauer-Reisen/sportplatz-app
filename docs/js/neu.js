@@ -1,11 +1,11 @@
 // Seite „Platz anlegen“: Verein und Ort eintippen. Die Lage kommt entweder vom Handy
 // („Ich bin gerade dort“) oder man tippt den Platz auf der Karte an („Auf der Karte zeigen“),
 // z. B. nachträglich von daheim oder als Betreiber.
-import { addPlatz, ApiError, cache } from './api.js?v=0.4.3';
-import { locate, pos, posFrisch, meters } from './geo.js?v=0.4.3';
-import { neueKarte, ortSuchen, START } from './kartenbaustein.js?v=0.4.3';
-import { esc, dialog, toast } from './ui.js?v=0.4.3';
-import { vorschlaege, offen } from './vorschlaege.js?v=0.4.3';
+import { addPlatz, ApiError, cache } from './api.js?v=0.4.4';
+import { locate, pos, posFrisch, meters } from './geo.js?v=0.4.4';
+import { neueKarte, ortSuchen, START } from './kartenbaustein.js?v=0.4.4';
+import { esc, dialog, toast } from './ui.js?v=0.4.4';
+import { vorschlaege, offen } from './vorschlaege.js?v=0.4.4';
 
 // #/neu/<text>    Suchtext aus der Platzsuche („… ist noch nicht in der App“) – gleich auf der Karte suchen
 // #/neu/osm/<nr>  Platz aus der Vereinsliste – Verein, Ort und Lage sind schon ausgefüllt

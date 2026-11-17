@@ -2,7 +2,7 @@
 // Wer die App neu hat, bekommt stattdessen den Rundgang.
 // Neueste zuerst; nur Änderungen, die man sieht und kennen sollte (keine Reparaturen).
 // Jeder Eintrag nennt in `karte` die Rundgang-Karte, die ihn erklärt, oder 'klein' (prüft scripts/check-help.js).
-import { dialog } from './ui.js?v=0.4.3';
+import { dialog } from './ui.js?v=0.4.4';
 
 export const NEWS = [
   {
@@ -40,7 +40,7 @@ export const NEWS = [
     v: '0.3.0', karte: 'bewerten', title: 'Jetzt wird bewertet ⭐',
     items: [
       'Unten auf <strong>Bewerten</strong> oder auf einer Platzseite <strong>⭐ Jetzt bewerten</strong>. Gesamt-Sterne reichen.',
-      'Kein Netz? Die Bewertung wartet im Handy und geht von selbst raus. 10 Sekunden lang kannst du sie noch <strong>rückgängig</strong> machen.',
+      'Kein Netz? Die Bewertung wartet im Handy und geht von selbst raus. 5 Sekunden lang kannst du sie noch <strong>rückgängig</strong> machen.',
     ],
   },
   {
