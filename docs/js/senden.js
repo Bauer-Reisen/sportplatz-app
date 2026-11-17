@@ -1,9 +1,9 @@
 // Warteschlange für Bewertungen: erst im Handy speichern, dann senden.
 // So geht nichts verloren, wenn am Platz kein Netz ist, und man hat 10 Sekunden zum Rückgängigmachen.
 // Die Gerätenummer ist eine Zufallszahl – sie verrät nichts über dich; der Server speichert sie nicht.
-import { store } from './store.js?v=0.4.2';
-import { call, neuLaden } from './api.js?v=0.4.2';
-import { toast } from './ui.js?v=0.4.2';
+import { store } from './store.js?v=0.4.3';
+import { call, neuLaden } from './api.js?v=0.4.3';
+import { toast } from './ui.js?v=0.4.3';
 
 export const WARTEN_MS = 10_000;
 

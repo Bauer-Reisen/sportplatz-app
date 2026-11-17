@@ -1,24 +1,33 @@
 // Verbindung zur gemeinsamen Datenbank. Platzliste und Platzseiten werden im Handy zwischengespeichert,
 // damit sie am Platz auch bei schlechtem Netz da sind.
-import { API } from './config.js?v=0.4.2';
-import { store } from './store.js?v=0.4.2';
+import { API } from './config.js?v=0.4.3';
+import { store } from './store.js?v=0.4.3';
 
 export class ApiError extends Error {
   constructor(status, message, data = {}) { super(message); this.status = status; this.data = data; }
 }
 
+// Höchstens so lange warten (schwaches Netz am Platz), dann zählt es als „kein Netz“.
+const WARTEN = { GET: 8000, POST: 15000 };
+
 export async function call(path, { method = 'GET', body, headers = {} } = {}) {
   let res;
+  let data;
+  const stopp = new AbortController();
+  const uhr = setTimeout(() => stopp.abort(), WARTEN[method] || 15000);
   try {
     res = await fetch(API + path, {
       method,
       headers: body === undefined ? headers : { 'Content-Type': 'application/json', ...headers },
       body: body === undefined ? undefined : JSON.stringify(body),
+      signal: stopp.signal,
     });
+    data = await res.json().catch(() => ({}));
   } catch {
     throw new ApiError(0, 'Gerade kein Netz. Bitte später nochmal versuchen.');
+  } finally {
+    clearTimeout(uhr);
   }
-  const data = await res.json().catch(() => ({}));
   if (!res.ok) throw new ApiError(res.status, data.error || `Fehler ${res.status}`, data);
   return data;
 }
@@ -52,6 +61,18 @@ export async function addPlatz(p) {
   cache.plaetze = [...(cache.plaetze || []), platz];
   store.set('plaetze', JSON.stringify(cache.plaetze));
   return platz;
+}
+
+// Sofort anzeigbar: die zuletzt geladene Liste aus dem Handy
+export const gespeichertePlaetze = () => cache.plaetze || lesen('plaetze');
+export const gespeicherterPlatz = (id) => (lesen('platzSeiten') || {})[id] || null;
+
+// Für Karte und Bewerten: gespeicherte Liste sofort, frische still im Hintergrund
+export async function schnellPlaetze() {
+  const alt = gespeichertePlaetze();
+  if (!alt) return getPlaetze();
+  getPlaetze().catch(() => {});
+  return alt;
 }
 
 export const findPlatz = (id) => (cache.plaetze || lesen('plaetze') || []).find((p) => p.id === id);

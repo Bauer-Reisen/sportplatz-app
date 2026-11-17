@@ -3,16 +3,16 @@
 //   #/bewerten/<id>          → Sterne (+ freiwillig: Einzelnoten, Angebot, Bierpreis)
 //   #/bewerten/<id>/angebot  → nur Angebot eintragen, ohne Sterne (z. B. als Betreiber)
 // Gesendet wird über die Warteschlange (senden.js): klappt auch ohne Netz, 10 Sekunden „Rückgängig“.
-import { HIER_METER } from './config.js?v=0.4.2';
-import { getPlaetze, findPlatz, getPlatz } from './api.js?v=0.4.2';
-import { locate, pos, posFrisch, meters, fmtDist } from './geo.js?v=0.4.2';
-import { ANGEBOT } from './angebot.js?v=0.4.2';
-import { einreihen, zuruecknehmen, heuteBewertet, neueId, WARTEN_MS, heute } from './senden.js?v=0.4.2';
-import { esc, toast, undoBar, zahl } from './ui.js?v=0.4.2';
-import { merken, vergessen, warDa } from './besuche.js?v=0.4.2';
-import { platzSuche } from './suche.js?v=0.4.2';
-import { vorschlaege, offen } from './vorschlaege.js?v=0.4.2';
-import { vorschlagHtml, naechster, hierBekannt } from './liste.js?v=0.4.2';
+import { HIER_METER } from './config.js?v=0.4.3';
+import { schnellPlaetze, findPlatz, getPlatz, gespeicherterPlatz } from './api.js?v=0.4.3';
+import { locate, pos, posFrisch, meters, fmtDist } from './geo.js?v=0.4.3';
+import { ANGEBOT } from './angebot.js?v=0.4.3';
+import { einreihen, zuruecknehmen, heuteBewertet, neueId, WARTEN_MS, heute } from './senden.js?v=0.4.3';
+import { esc, toast, undoBar, zahl } from './ui.js?v=0.4.3';
+import { merken, vergessen, warDa } from './besuche.js?v=0.4.3';
+import { platzSuche } from './suche.js?v=0.4.3';
+import { vorschlaege, offen } from './vorschlaege.js?v=0.4.3';
+import { vorschlagHtml, naechster, hierBekannt } from './liste.js?v=0.4.3';
 
 const wort = (v) => (v < 1.5 ? 'Lieber nicht' : v < 2.5 ? 'Geht so' : v < 3.5 ? 'Ordentlich' : v < 4.5 ? 'Gut' : 'Top!');
 const EINZELN = [
@@ -43,7 +43,7 @@ async function waehlen(view) {
   let plaetze = [];
   let liste = [];
   vorschlaege().then((l) => { liste = l; });
-  try { plaetze = await getPlaetze(); } catch (ex) { $('#liste').innerHTML = `<li class="muted">${esc(ex.message)}</li>`; }
+  try { plaetze = await schnellPlaetze(); } catch (ex) { $('#liste').innerHTML = `<li class="muted">${esc(ex.message)}</li>`; }
 
   const zeichnen = () => {
     const q = $('#suche').value.trim();
@@ -84,8 +84,14 @@ async function waehlen(view) {
 async function formular(view, id, nurAngebot) {
   let p = findPlatz(id);
   let daten = null;
-  view.innerHTML = '<p class="loading">Lade …</p>';
-  try { daten = await getPlatz(id); p = daten.platz; } catch (ex) { if (ex.status === 404) p = null; }
+  // Schon mal gesehen? Dann sofort los, ohne aufs Netz zu warten.
+  const vorher = gespeicherterPlatz(id);
+  if (vorher) { daten = vorher; p = vorher.platz; getPlatz(id).catch(() => {}); }
+  else {
+    view.innerHTML = '<p class="loading">Lade …</p>';
+    try { daten = await getPlatz(id); p = daten.platz; } catch (ex) { if (ex.status === 404) p = null; }
+    if (!view.isConnected) return;
+  }
   if (!p) {
     view.innerHTML = `<section><h1>Platz nicht gefunden</h1><p class="lead">Vielleicht wurde er ausgeblendet – oder gerade ist kein Netz.</p><a class="btn btn-wide" href="#/bewerten">Anderen Platz wählen</a></section>`;
     return;

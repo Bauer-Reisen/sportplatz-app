@@ -1,9 +1,10 @@
-// Offline-Speicher der App-Dateien (wie Bike-App).
-// Immer zuerst das Netz fragen (höchstens 4 Sekunden), damit Updates sofort ankommen.
-// Ohne Netz oder bei schwachem Netz am Platz: die gespeicherte Kopie.
+// Offline-Speicher der App-Dateien.
+// Schnell: Dateien dieser Version kommen sofort aus dem Handy, ohne aufs Netz zu warten.
+// Die Startseite kommt ebenfalls sofort aus dem Handy und wird im Hintergrund aufgefrischt.
+// Updates: app.js merkt eine neue Version (version.json) und lädt mit ?v=<neu> – das geht immer übers Netz.
 // Daten aus der Datenbank (anderer Server) werden hier NICHT gespeichert.
 
-const VERSION = '0.4.2';
+const VERSION = '0.4.3';
 const CACHE = 'halbzeit-' + VERSION;
 const DATEIEN = [
   './', 'index.html', 'manifest.webmanifest', 'style.css', 'version.json',
@@ -32,6 +33,22 @@ self.addEventListener('activate', (ev) => {
   );
 });
 
+// Netz fragen, höchstens `ms` lang; danach (oder ohne Netz) die Kopie aus dem Handy.
+async function netzZuerst(req, cache, ms) {
+  const netz = fetch(req).then((res) => {
+    if (res.ok && res.type === 'basic') cache.put(req, res.clone());
+    return res;
+  });
+  netz.catch(() => { /* offline */ });
+  const zeit = new Promise((resolve) => setTimeout(resolve, ms, null));
+  try {
+    const res = await Promise.race([netz, zeit]);
+    if (res) return res;
+  } catch { /* offline */ }
+  const kopie = await cache.match(req, { ignoreSearch: true });
+  return kopie || netz; // nichts gespeichert: weiter aufs Netz warten
+}
+
 self.addEventListener('fetch', (ev) => {
   const req = ev.request;
   if (req.method !== 'GET') return;
@@ -39,20 +56,21 @@ self.addEventListener('fetch', (ev) => {
   if (url.origin !== location.origin) return; // Datenbank und fremde Dienste nicht anfassen
   if (url.pathname.endsWith('/version.json')) return; // Update-Prüfung immer frisch
 
+  const v = url.searchParams.get('v');
   ev.respondWith((async () => {
     const cache = await caches.open(CACHE);
-    const netz = fetch(req).then((res) => {
-      if (res.ok && res.type === 'basic') cache.put(req, res.clone());
-      return res;
-    });
-    const zeit = new Promise((resolve) => setTimeout(resolve, 4000, null));
-    try {
-      const res = await Promise.race([netz, zeit]);
-      if (res) return res;
-    } catch { /* offline */ }
-    // ?v=… dient nur dem Neuladen nach Updates – offline zählt die Datei selbst
+    // Andere Version angefragt (gerade ein Update): übers Netz, sonst klappt das Update nicht
+    if (v && v !== VERSION) return netzZuerst(req, cache, 8000);
     const kopie = await cache.match(req, { ignoreSearch: true });
-    if (kopie) return kopie;
-    return netz; // nichts gespeichert: weiter aufs Netz warten
+    if (kopie) {
+      // Startseite und Dateien ohne Versionsnummer im Hintergrund auffrischen
+      if (!v) {
+        ev.waitUntil(fetch(req).then((res) => {
+          if (res.ok && res.type === 'basic') return cache.put(req, res);
+        }).catch(() => {}));
+      }
+      return kopie;
+    }
+    return netzZuerst(req, cache, 8000);
   })());
 });

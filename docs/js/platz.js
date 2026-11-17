@@ -1,11 +1,11 @@
 // Seite eines Platzes: Noten, was es gibt (✓ / ✗ / ?), Bierpreis, letzte Einträge mit „Melden“.
-import { getPlatz, findPlatz, melden } from './api.js?v=0.4.2';
-import { mapsLink, posFrisch, pos, meters, fmtDist } from './geo.js?v=0.4.2';
-import { ANGEBOT } from './angebot.js?v=0.4.2';
-import { heuteBewertet, wartend, geraet } from './senden.js?v=0.4.2';
-import { store } from './store.js?v=0.4.2';
-import { esc, dialog, toast, zahl, datum } from './ui.js?v=0.4.2';
-import { warDa, manuell } from './besuche.js?v=0.4.2';
+import { getPlatz, findPlatz, gespeicherterPlatz, melden } from './api.js?v=0.4.3';
+import { mapsLink, posFrisch, pos, meters, fmtDist } from './geo.js?v=0.4.3';
+import { ANGEBOT } from './angebot.js?v=0.4.3';
+import { heuteBewertet, wartend, geraet } from './senden.js?v=0.4.3';
+import { store } from './store.js?v=0.4.3';
+import { esc, dialog, toast, zahl, datum } from './ui.js?v=0.4.3';
+import { warDa, manuell } from './besuche.js?v=0.4.3';
 
 const NAMEN = { gesamt: 'Gesamt', bier: '🍺 Bier', essen: '🌭 Essen', preise: '💶 Preise', stimmung: '🎉 Stimmung' };
 const GRUENDE = [
@@ -18,15 +18,25 @@ const GRUENDE = [
 export const sterneText = (x) => `<span class="teilsterne" aria-hidden="true"><span class="leer">★★★★★</span><span class="voll" style="width:${Math.max(0, Math.min(5, x)) * 20}%">★★★★★</span></span>`;
 
 export async function render(view, id) {
+  // Zuletzt gesehene Fassung sofort zeigen, dann still die frische holen
+  const vorher = gespeicherterPlatz(id);
   const schnell = findPlatz(id);
-  view.innerHTML = schnell
-    ? `<section><a class="back" href="#/">‹ Alle Plätze</a><h1>${esc(schnell.verein)}</h1><p class="lead">${esc(schnell.ort)}</p><p class="muted">Lade Bewertungen …</p></section>`
-    : '<p class="loading">Lade …</p>';
+  if (vorher) zeigen(view, vorher);
+  else {
+    view.innerHTML = schnell
+      ? `<section><a class="back" href="#/">‹ Alle Plätze</a><h1>${esc(schnell.verein)}</h1><p class="lead">${esc(schnell.ort)}</p><p class="muted">Lade Bewertungen …</p></section>`
+      : '<p class="loading">Lade …</p>';
+  }
 
   let d;
   try {
     d = await getPlatz(id);
   } catch (ex) {
+    if (!view.isConnected) return;
+    if (vorher && !ex.status) { // kein Netz: gespeicherte Fassung bleibt stehen, mit Hinweis
+      zeigen(view, { ...vorher, offline: true });
+      return;
+    }
     view.innerHTML = `
       <section>
         <a class="back" href="#/">‹ Alle Plätze</a>
@@ -37,6 +47,14 @@ export async function render(view, id) {
       </section>`;
     return;
   }
+  if (!view.isConnected) return;
+  // Nur neu zeichnen, wenn sich etwas geändert hat (sonst springt die Seite)
+  const ohne = (x) => JSON.stringify({ ...x, gemerkt: 0, offline: false });
+  if (vorher && ohne(vorher) === ohne(d)) return;
+  zeigen(view, d);
+}
+
+function zeigen(view, d) {
   const p = d.platz;
   const m = posFrisch() ? meters(pos.lat, pos.lon, p.lat, p.lon) : null;
   const schonHeute = heuteBewertet(p.id);

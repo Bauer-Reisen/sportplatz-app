@@ -1,24 +1,24 @@
 // Einstieg der App: Seitenwechsel, Rundgang beim ersten Öffnen, „Was ist neu?“, Updates, Offline.
-import { VERSION } from './config.js?v=0.4.2';
-import { store } from './store.js?v=0.4.2';
-import { toast } from './ui.js?v=0.4.2';
-import { renderTabs } from './tabs.js?v=0.4.2';
-import { runTour } from './tour.js?v=0.4.2';
-import { unseen, showNews, NEWS } from './news.js?v=0.4.2';
-import { senderStarten } from './senden.js?v=0.4.2';
+import { VERSION } from './config.js?v=0.4.3';
+import { store } from './store.js?v=0.4.3';
+import { toast } from './ui.js?v=0.4.3';
+import { renderTabs } from './tabs.js?v=0.4.3';
+import { runTour } from './tour.js?v=0.4.3';
+import { unseen, showNews, NEWS } from './news.js?v=0.4.3';
+import { senderStarten } from './senden.js?v=0.4.3';
 
 const view = document.getElementById('view');
 
 // Jede Seite ist eine eigene Datei und wird erst beim Öffnen geladen.
 const PAGES = {
-  liste: () => import('./liste.js?v=0.4.2'),
-  karte: () => import('./karte.js?v=0.4.2'),
-  bewerten: () => import('./bewerten.js?v=0.4.2'),
-  mehr: () => import('./mehr.js?v=0.4.2'),
-  platz: () => import('./platz.js?v=0.4.2'),
-  neu: () => import('./neu.js?v=0.4.2'),
-  verwaltung: () => import('./verwaltung.js?v=0.4.2'),
-  meine: () => import('./meine.js?v=0.4.2'),
+  liste: () => import('./liste.js?v=0.4.3'),
+  karte: () => import('./karte.js?v=0.4.3'),
+  bewerten: () => import('./bewerten.js?v=0.4.3'),
+  mehr: () => import('./mehr.js?v=0.4.3'),
+  platz: () => import('./platz.js?v=0.4.3'),
+  neu: () => import('./neu.js?v=0.4.3'),
+  verwaltung: () => import('./verwaltung.js?v=0.4.3'),
+  meine: () => import('./meine.js?v=0.4.3'),
 };
 // Unterseiten gehören zu diesem Reiter
 const TAB_OF = { platz: 'liste', neu: 'liste', verwaltung: 'mehr', meine: 'liste' };
@@ -27,18 +27,23 @@ async function route() {
   const [, page = '', ...rest] = (location.hash || '#/').split('/');
   const name = PAGES[page] ? page : 'liste';
   renderTabs(TAB_OF[name] || name);
+  // Jede Seite bekommt einen eigenen Rahmen. Lädt eine alte Seite noch nach, schreibt sie ins Leere.
+  const box = document.createElement('div');
+  box.className = 'seite';
   try {
     const mod = await PAGES[name]();
-    await mod.render(view, ...rest.map(decodeURIComponent));
+    view.replaceChildren(box);
+    await mod.render(box, ...rest.map(decodeURIComponent));
   } catch (ex) {
     console.error(ex);
-    view.innerHTML = `
+    if (!box.isConnected) return; // inzwischen andere Seite offen
+    box.innerHTML = `
       <section class="center" style="margin-top:20vh">
         <h1>Das hat nicht geklappt</h1>
         <p class="lead">Vielleicht gerade kein Netz?</p>
         <button type="button" class="btn btn-primary" id="retry">Nochmal versuchen</button>
       </section>`;
-    view.querySelector('#retry').addEventListener('click', route);
+    box.querySelector('#retry').addEventListener('click', route);
   }
 }
 

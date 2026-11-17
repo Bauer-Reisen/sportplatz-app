@@ -1,12 +1,12 @@
 // Seite „Liste“: alle Plätze, Suche und „Wo bin ich?“.
-import { HIER_METER } from './config.js?v=0.4.2';
-import { getPlaetze, cache } from './api.js?v=0.4.2';
-import { locate, pos, posFrisch, meters, fmtDist } from './geo.js?v=0.4.2';
-import { esc, zahl } from './ui.js?v=0.4.2';
-import { platzSuche } from './suche.js?v=0.4.2';
-import { vorschlaege, offen, vorschlagLink } from './vorschlaege.js?v=0.4.2';
-import { anzahl } from './besuche.js?v=0.4.2';
-import { installBanner, wireInstall } from './install.js?v=0.4.2';
+import { HIER_METER } from './config.js?v=0.4.3';
+import { getPlaetze, gespeichertePlaetze, cache } from './api.js?v=0.4.3';
+import { locate, pos, posFrisch, meters, fmtDist } from './geo.js?v=0.4.3';
+import { esc, zahl } from './ui.js?v=0.4.3';
+import { platzSuche } from './suche.js?v=0.4.3';
+import { vorschlaege, offen, vorschlagLink } from './vorschlaege.js?v=0.4.3';
+import { anzahl } from './besuche.js?v=0.4.3';
+import { installBanner, wireInstall } from './install.js?v=0.4.3';
 
 let suche = ''; // bleibt beim Seitenwechsel erhalten
 
@@ -81,10 +81,17 @@ export async function render(view) {
     }
   });
 
-  vorschlaege().then((l) => { liste = l; if (suche.trim()) zeichnen(); if (posFrisch()) hierZeigen(); });
+  vorschlaege().then((l) => { liste = l; if (!view.isConnected) return; if (suche.trim()) zeichnen(); if (posFrisch()) hierZeigen(); });
+  // Erst sofort die zuletzt geladene Liste zeigen, dann (falls nötig) die frische
+  const vorher = gespeichertePlaetze();
+  if (vorher) { plaetze = vorher; hierZeigen(); zeichnen(); }
   try {
-    plaetze = await getPlaetze();
+    const frisch = await getPlaetze();
+    if (!view.isConnected) return;
+    if (frisch === plaetze) return;
+    plaetze = frisch;
   } catch (ex) {
+    if (!view.isConnected || vorher) return;
     $('#liste').innerHTML = `<li class="muted">${esc(ex.message)}</li>`;
     return;
   }
