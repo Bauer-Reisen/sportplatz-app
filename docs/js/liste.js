@@ -1,12 +1,12 @@
 // Seite „Liste“: alle Plätze, Suche und „Wo bin ich?“.
-import { HIER_METER } from './config.js?v=0.4.7';
-import { getPlaetze, gespeichertePlaetze, cache } from './api.js?v=0.4.7';
-import { locate, pos, posFrisch, meters, fmtDist } from './geo.js?v=0.4.7';
-import { esc, zahl } from './ui.js?v=0.4.7';
-import { platzSuche } from './suche.js?v=0.4.7';
-import { vorschlaege, offen, vorschlagLink } from './vorschlaege.js?v=0.4.7';
-import { anzahl } from './besuche.js?v=0.4.7';
-import { installBanner, wireInstall } from './install.js?v=0.4.7';
+import { HIER_METER } from './config.js?v=0.4.8';
+import { getPlaetze, gespeichertePlaetze, cache } from './api.js?v=0.4.8';
+import { locate, pos, posFrisch, meters, fmtDist } from './geo.js?v=0.4.8';
+import { esc, zahl } from './ui.js?v=0.4.8';
+import { platzSuche } from './suche.js?v=0.4.8';
+import { vorschlaege, offen, vorschlagLink } from './vorschlaege.js?v=0.4.8';
+import { anzahl } from './besuche.js?v=0.4.8';
+import { installBanner, wireInstall } from './install.js?v=0.4.8';
 
 let suche = ''; // bleibt beim Seitenwechsel erhalten
 

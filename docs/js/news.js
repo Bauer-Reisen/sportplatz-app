@@ -2,7 +2,7 @@
 // Wer die App neu hat, bekommt stattdessen den Rundgang.
 // Neueste zuerst; nur Änderungen, die man sieht und kennen sollte (keine Reparaturen).
 // Jeder Eintrag nennt in `karte` die Rundgang-Karte, die ihn erklärt, oder 'klein' (prüft scripts/check-help.js).
-import { dialog } from './ui.js?v=0.4.7';
+import { dialog } from './ui.js?v=0.4.8';
 
 export const NEWS = [
   {

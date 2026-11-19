@@ -3,16 +3,16 @@
 //   #/bewerten/<id>          → Sterne (+ freiwillig: Einzelnoten, Angebot, Bierpreis)
 //   #/bewerten/<id>/angebot  → nur Angebot eintragen, ohne Sterne (z. B. als Betreiber)
 // Gesendet wird über die Warteschlange (senden.js): klappt auch ohne Netz, 5 Sekunden „Rückgängig“.
-import { HIER_METER } from './config.js?v=0.4.7';
-import { schnellPlaetze, findPlatz, getPlatz, gespeicherterPlatz } from './api.js?v=0.4.7';
-import { locate, pos, posFrisch, meters, fmtDist } from './geo.js?v=0.4.7';
-import { ANGEBOT } from './angebot.js?v=0.4.7';
-import { einreihen, zuruecknehmen, heuteBewertet, neueId, WARTEN_MS, heute } from './senden.js?v=0.4.7';
-import { esc, toast, undoBar, zahl } from './ui.js?v=0.4.7';
-import { merken, vergessen, warDa } from './besuche.js?v=0.4.7';
-import { platzSuche } from './suche.js?v=0.4.7';
-import { vorschlaege, offen } from './vorschlaege.js?v=0.4.7';
-import { vorschlagHtml, naechster, hierBekannt } from './liste.js?v=0.4.7';
+import { HIER_METER } from './config.js?v=0.4.8';
+import { schnellPlaetze, findPlatz, getPlatz, gespeicherterPlatz } from './api.js?v=0.4.8';
+import { locate, pos, posFrisch, meters, fmtDist } from './geo.js?v=0.4.8';
+import { ANGEBOT } from './angebot.js?v=0.4.8';
+import { einreihen, zuruecknehmen, heuteBewertet, neueId, WARTEN_MS, heute } from './senden.js?v=0.4.8';
+import { esc, toast, undoBar, zahl } from './ui.js?v=0.4.8';
+import { merken, vergessen, warDa } from './besuche.js?v=0.4.8';
+import { platzSuche } from './suche.js?v=0.4.8';
+import { vorschlaege, offen } from './vorschlaege.js?v=0.4.8';
+import { vorschlagHtml, naechster, hierBekannt } from './liste.js?v=0.4.8';
 
 const wort = (v) => (v < 1.5 ? 'Lieber nicht' : v < 2.5 ? 'Geht so' : v < 3.5 ? 'Ordentlich' : v < 4.5 ? 'Gut' : 'Top!');
 const EINZELN = [
